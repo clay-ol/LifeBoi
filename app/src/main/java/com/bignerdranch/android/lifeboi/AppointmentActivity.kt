@@ -24,7 +24,7 @@ class AppointmentActivity : AppCompatActivity() {
 
     companion object{
         fun newIntent(packageContext: Context) : Intent {
-            return Intent(packageContext, HomeActivity::class.java).apply {
+            return Intent(packageContext, AppointmentActivity::class.java).apply {
                 putExtra(APPOINTMENT_DATE, true)
             }
         }
