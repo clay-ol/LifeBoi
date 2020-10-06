@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "950319434119",
+    "firebase_url": "https://lifeboi.firebaseio.com",
+    "project_id": "lifeboi",
+    "storage_bucket": "lifeboi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:950319434119:android:e7c80541f9d3f563d4ab22",
+        "android_client_info": {
+          "package_name": "com.bignerdranch.android.lifeboi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "950319434119-sltueuag03m7jt6v5qiv5iavo1jrllt4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt5fgGMVETgp9vPiSaUcFNmbq9T0Vfauw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "950319434119-sltueuag03m7jt6v5qiv5iavo1jrllt4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
