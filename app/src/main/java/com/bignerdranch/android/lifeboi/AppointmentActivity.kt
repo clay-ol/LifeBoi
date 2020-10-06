@@ -11,6 +11,15 @@ class AppointmentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment)
+
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_appointment_container)
+        if (currentFragment == null) {
+            val fragment = AppointmentFragment()
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_appointment_container, fragment)
+                .commit()
+        }
     }
 
     companion object{

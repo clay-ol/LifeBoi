@@ -22,7 +22,8 @@ class HomeActivity : AppCompatActivity() {
         stepsButton = findViewById(R.id.steps_button)
 
         weatherButton.setOnClickListener {
-
+            val intent = Intent(this, AppointmentActivity::class.java)
+            startActivity(intent)
         }
 
         eventButton.setOnClickListener {
