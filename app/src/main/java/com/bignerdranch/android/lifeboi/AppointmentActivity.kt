@@ -14,7 +14,7 @@ class AppointmentActivity : AppCompatActivity() {
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_appointment_container)
         if (currentFragment == null) {
-            val fragment = AppointmentFragment()
+            val fragment = CalendarFragment.newInstance()
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_appointment_container, fragment)
