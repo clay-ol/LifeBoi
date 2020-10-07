@@ -35,6 +35,7 @@ class HomeFragment : Fragment() {
         super.onDetach()
         callbacks = null
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

@@ -13,6 +13,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 
+const val DEBUG = "LIFEBOI"
 private const val TAG = "SplashActivity"
 private const val REQUEST_HOME_SCREEN = 0
 
