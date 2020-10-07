@@ -15,6 +15,7 @@ class HomeFragment : Fragment() {
 
     interface Callbacks {
         fun onWeatherSelected()
+        fun onStepsSelected()
         fun onEventSelected()
     }
 
@@ -61,6 +62,7 @@ class HomeFragment : Fragment() {
         }
 
         stepsButton.setOnClickListener {
+            callbacks?.onStepsSelected()
 
         }
         return view

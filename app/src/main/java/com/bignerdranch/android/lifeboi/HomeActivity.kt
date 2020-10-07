@@ -34,6 +34,16 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment )
+            .addToBackStack( null )
+            .commit()
+    }
+
+    override fun onStepsSelected() {
+        val fragment = StepsFragment()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, fragment )
+            .addToBackStack( null )
             .commit()
     }
 
