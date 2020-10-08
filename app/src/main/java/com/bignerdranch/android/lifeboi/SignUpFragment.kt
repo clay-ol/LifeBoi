@@ -10,17 +10,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.lifeboi.database.FirebaseClient
 
+private const val REQUEST_HOME_SCREEN = 0
+
 class SignUpFragment: Fragment() {
 
-    private lateinit var username: String
-    private lateinit var firstName: String
-    private lateinit var lastName: String
-    private lateinit var email: String
-    private lateinit var phoneNumber: String
-    private lateinit var password: String
+    private var username = ""
+    private var firstName = ""
+    private var lastName = ""
+    private var email = ""
+    private var phoneNumber = ""
+    private var password = ""
     private lateinit var userNameEditText: EditText
     private lateinit var firstNameEditText: EditText
     private lateinit var lastNameEditText: EditText
@@ -232,17 +235,46 @@ class SignUpFragment: Fragment() {
         passwordEditText.addTextChangedListener(passwordWatcher)
 
         signUpButton.setOnClickListener {
-            Log.d("SplashActivity", username)
-            Log.d("SplashActivity", firstName)
-            Log.d("SplashActivity", lastName)
-            Log.d("SplashActivity", email)
-            Log.d("SplashActivity", phoneNumber.toString())
-            Log.d("SplashActivity", password)
+            val userAccount = hashMapOf(
+                "first_name" to firstName,
+                "last_name" to lastName,
+                "email" to email,
+                "phone_number" to phoneNumber,
+                "password" to password
+            )
+
+            if (!foundEmpty(userAccount)) {
+                firebaseClient.checkForExistingUser(username) {result ->
+                    if (result) {
+                        firebaseClient.signUp(userAccount, username)
+                        val intent = HomeActivity.newIntent((context), username)
+                        startActivityForResult(intent, REQUEST_HOME_SCREEN)
+
+                    } else {
+                        Toast.makeText(activity, "Username Taken!", Toast.LENGTH_LONG).show()
+                    }
+                }
+
+            } else {
+                Toast.makeText(activity, "Missing Input Found!", Toast.LENGTH_LONG).show()
+            }
+
+
         }
 
         backButton.setOnClickListener {
             callbacks?.goToSplash()
         }
+    }
+
+    private fun foundEmpty(dataMap: HashMap<String, String>): Boolean {
+        for ((key, value) in dataMap) {
+            if (value.equals("")) {
+                return true
+            }
+        }
+
+        return false
     }
 
     companion object {

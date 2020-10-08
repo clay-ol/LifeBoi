@@ -2,6 +2,7 @@ package com.bignerdranch.android.lifeboi
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import android.widget.Button
 
 
 private const val TAG = "HomeFragment"
+private const val ARG_USERNAME = "username"
 
 class HomeFragment : Fragment() {
 
@@ -25,6 +27,8 @@ class HomeFragment : Fragment() {
     private lateinit var eventButton: Button
     private lateinit var stepsButton: Button
 
+    private var username = ""
+
 
     override fun onAttach( context: Context){
         super.onAttach(context)
@@ -38,6 +42,9 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        username = arguments?.getSerializable(ARG_USERNAME) as String
+
+        Log.d(TAG, "Got username: ${username}")
     }
 
     override fun onCreateView(
@@ -67,5 +74,17 @@ class HomeFragment : Fragment() {
 
         }
         return view
+    }
+
+    companion object {
+        fun newInstance(username: String): HomeFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_USERNAME, username)
+            }
+
+            return HomeFragment().apply{
+                arguments = args
+            }
+        }
     }
 }

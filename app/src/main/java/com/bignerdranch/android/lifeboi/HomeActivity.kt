@@ -9,16 +9,20 @@ const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
 private const val REQUEST_EVENT_SCREEN = 10
 
 class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
+    private var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        username = intent.getStringExtra(EXTRA_USER_FOUND).toString()
+
+
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
 
         if (currentFragment == null) {
-            val fragment = HomeFragment()
+            val fragment = HomeFragment.newInstance(username)
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_container, fragment)
@@ -52,9 +56,9 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
     }
 
     companion object{
-        fun newIntent(packageContext: Context?) : Intent {
+        fun newIntent(packageContext: Context?, username: String) : Intent {
             return Intent(packageContext, HomeActivity::class.java).apply {
-                putExtra(EXTRA_USER_FOUND, true)
+                putExtra(EXTRA_USER_FOUND, username)
             }
         }
     }

@@ -129,7 +129,7 @@ class LoginFragment: Fragment() {
                     Log.d("SplashActivity", "Result: ${result}")
 
                     if (result) {
-                        val intent = HomeActivity.newIntent((context))
+                        val intent = HomeActivity.newIntent((context), username)
                         startActivityForResult(intent, REQUEST_HOME_SCREEN)
 
 

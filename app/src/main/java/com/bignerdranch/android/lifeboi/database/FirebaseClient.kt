@@ -18,6 +18,35 @@ class FirebaseClient private constructor(context: Context) {
 
     private val executor = Executors.newSingleThreadExecutor()
 
+    fun signUp(data: HashMap<String, String>, username: String) {
+        database.collection("users").document(username)
+            .set(data)
+            .addOnSuccessListener {
+                Log.d("SplashActivity", "Sign Up Successful!")
+            }
+            .addOnFailureListener{e ->
+                Log.d("SplashActivity", "Sign Up Error", e)
+            }
+    }
+
+    fun checkForExistingUser(username: String, callback: (Boolean) -> Unit) {
+        database.collection("users").document(username)
+            .get()
+            .addOnSuccessListener { document ->
+                if (!document.exists()) {
+                    callback.invoke(true)
+                    Log.d("SplashActivity", "No Existing Username: ${username} Found")
+                } else {
+                    Log.d("SplashActivity", "Found Existing Username: ${username}")
+                    callback.invoke(false)
+                }
+            }
+
+            .addOnFailureListener{ exception ->
+                Log.d("SplashActivity", "got failed with ", exception)
+            }
+    }
+
 
     fun checkLoginPassword(username: String, password: String, callback:(Boolean) -> Unit
     ) {
