@@ -18,8 +18,8 @@ private const val REQUEST_HOME_SCREEN = 0
 
 class LoginFragment: Fragment() {
 
-    private lateinit var username: String
-    private lateinit var password: String
+    private var username = ""
+    private var password = ""
     private lateinit var userNameEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
@@ -120,21 +120,28 @@ class LoginFragment: Fragment() {
         passwordEditText.addTextChangedListener(passwordWatcher)
 
         loginButton.setOnClickListener {
-            Log.d("SplashActivity", username)
-            Log.d("SplashActivity", password)
 
-            firebaseClient.checkLoginPassword(username, password) {result ->
-                Log.d("SplashActivity", "Result: ${result}")
+            if (!username.equals("") && !password.equals("")) {
+                Log.d("SplashActivity", username)
+                Log.d("SplashActivity", password)
 
-                if (result) {
-                    val intent = HomeActivity.newIntent((context))
-                    startActivityForResult(intent, REQUEST_HOME_SCREEN)
+                firebaseClient.checkLoginPassword(username, password) {result ->
+                    Log.d("SplashActivity", "Result: ${result}")
+
+                    if (result) {
+                        val intent = HomeActivity.newIntent((context))
+                        startActivityForResult(intent, REQUEST_HOME_SCREEN)
 
 
-                } else {
-                    Toast.makeText(activity, "Incorrect Username or Password!", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(activity, "Incorrect Username or Password!", Toast.LENGTH_LONG).show()
+                    }
                 }
+
+            } else {
+                Toast.makeText(activity, "Missing Input Found!", Toast.LENGTH_LONG).show()
             }
+
 
 
         }
