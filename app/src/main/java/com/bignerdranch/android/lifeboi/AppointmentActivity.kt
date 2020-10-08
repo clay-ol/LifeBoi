@@ -15,7 +15,7 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks {
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_appointment_container)
         if (currentFragment == null) {
-            val fragment = CalendarFragment.newInstance()
+            val fragment = AppointmentListFragment.newInstance()
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_appointment_container, fragment)
@@ -24,15 +24,15 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks {
     }
 
     override fun onDateSelected() {
-        Log.d(DEBUG, "onDateSelected()")
-        val fragment = AppointmentListFragment.newInstance()
-        Log.d(DEBUG, "onDateSelected() Fragment made")
-
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
-            .commit()
+//        Log.d(DEBUG, "onDateSelected()")
+//        val fragment = AppointmentListFragment.newInstance()
+//        Log.d(DEBUG, "onDateSelected() Fragment made")
+//
+//        supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragment_appointment_container, fragment)
+//            .addToBackStack( null)
+//            .commit()
     }
 
     companion object{

@@ -20,7 +20,6 @@ private const val TAG = "AppointmentListFragment"
 class AppointmentListFragment : Fragment() {
 
     private lateinit var appointmentRecyclerView: RecyclerView
-//    private lateinit var appointmentRelativeLayout: RelativeLayout
     private lateinit var appointmentButton: Button
     private var adapter: AppointmentAdapter? = null
 
@@ -41,12 +40,9 @@ class AppointmentListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_appointment_list, container, false)
 
-        Log.d(DEBUG, "HERE")
-//        appointmentRelativeLayout = view.findViewById(R.id.appointment_list_manager) as RelativeLayout
         appointmentButton = view.findViewById(R.id.configure_appointment) as Button
         appointmentRecyclerView = view.findViewById(R.id.appoint_reycler_view) as RecyclerView
         appointmentRecyclerView.layoutManager = LinearLayoutManager(context)
-        Log.d(DEBUG, "Made it")
 
         updateUI()
 
