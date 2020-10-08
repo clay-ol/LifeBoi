@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 
 const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
 private const val REQUEST_EVENT_SCREEN = 10

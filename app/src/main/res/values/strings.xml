@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">LifeBoi</string>
+    <string name="login_button">Login</string>
+    <string name="signUp_button">Sign Up</string>
+    <string name="back_button">Back</string>
     <string name="steps_button">Steps</string>
     <string name="event_button">Events</string>
     <string name="weather_button">Weather</string>

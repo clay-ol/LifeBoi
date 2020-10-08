@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.bignerdranch.android.lifeboi.R
 
 private const val TAG = "WeatherFragment"
 
@@ -23,7 +24,7 @@ class WeatherFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
-        currentWeatherText = view.findViewById( R.id.currentWeather ) as TextView
+        currentWeatherText = view.findViewById(R.id.currentWeather) as TextView
         return view
     }
     override fun onStart() {
