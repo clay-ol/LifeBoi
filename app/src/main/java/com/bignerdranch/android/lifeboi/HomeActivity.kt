@@ -52,7 +52,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
     }
 
     companion object{
-        fun newIntent(packageContext: Context) : Intent {
+        fun newIntent(packageContext: Context?) : Intent {
             return Intent(packageContext, HomeActivity::class.java).apply {
                 putExtra(EXTRA_USER_FOUND, true)
             }

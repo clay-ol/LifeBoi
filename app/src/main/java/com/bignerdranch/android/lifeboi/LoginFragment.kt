@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.lifeboi.database.FirebaseClient
 
+private const val REQUEST_HOME_SCREEN = 0
+
 class LoginFragment: Fragment() {
 
     private lateinit var username: String
@@ -125,7 +127,9 @@ class LoginFragment: Fragment() {
                 Log.d("SplashActivity", "Result: ${result}")
 
                 if (result) {
-                    //do something
+                    val intent = HomeActivity.newIntent((context))
+                    startActivityForResult(intent, REQUEST_HOME_SCREEN)
+
 
                 } else {
                     Toast.makeText(activity, "Incorrect Username or Password!", Toast.LENGTH_LONG).show()
