@@ -15,6 +15,7 @@ class HomeFragment : Fragment() {
 
     interface Callbacks {
         fun onWeatherSelected()
+        fun onStepsSelected()
         fun onEventSelected()
     }
 
@@ -34,6 +35,7 @@ class HomeFragment : Fragment() {
         super.onDetach()
         callbacks = null
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -61,6 +63,7 @@ class HomeFragment : Fragment() {
         }
 
         stepsButton.setOnClickListener {
+            callbacks?.onStepsSelected()
 
         }
         return view

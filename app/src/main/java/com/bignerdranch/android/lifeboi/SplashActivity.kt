@@ -3,6 +3,7 @@ package com.bignerdranch.android.lifeboi
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
+const val DEBUG = "LIFEBOI"
 private const val TAG = "SplashActivity"
 private const val REQUEST_HOME_SCREEN = 0
 
