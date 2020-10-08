@@ -3,15 +3,19 @@ package com.bignerdranch.android.lifeboi.database
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.datamodel.UserAccount
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
 import java.util.concurrent.Executors
+import kotlin.collections.HashMap
 
 
 class FirebaseClient private constructor(context: Context) {
 
+    private val TAG = "FirebaseClient"
     private val database = Firebase.firestore
 
     var users: MutableLiveData<UserAccount> = MutableLiveData()
@@ -22,10 +26,10 @@ class FirebaseClient private constructor(context: Context) {
         database.collection("users").document(username)
             .set(data)
             .addOnSuccessListener {
-                Log.d("SplashActivity", "Sign Up Successful!")
+                Log.d(TAG, "Sign Up Successful!")
             }
             .addOnFailureListener{e ->
-                Log.d("SplashActivity", "Sign Up Error", e)
+                Log.d(TAG, "Sign Up Error", e)
             }
     }
 
@@ -35,15 +39,15 @@ class FirebaseClient private constructor(context: Context) {
             .addOnSuccessListener { document ->
                 if (!document.exists()) {
                     callback.invoke(true)
-                    Log.d("SplashActivity", "No Existing Username: ${username} Found")
+                    Log.d(TAG, "No Existing Username: ${username} Found")
                 } else {
-                    Log.d("SplashActivity", "Found Existing Username: ${username}")
+                    Log.d(TAG, "Found Existing Username: ${username}")
                     callback.invoke(false)
                 }
             }
 
             .addOnFailureListener{ exception ->
-                Log.d("SplashActivity", "got failed with ", exception)
+                Log.d(TAG, "got failed with ", exception)
             }
     }
 
@@ -55,24 +59,69 @@ class FirebaseClient private constructor(context: Context) {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     if (document.get("password")?.equals(password)!!) {
+                        Log.d(TAG, "username and password matches")
                         callback.invoke(true)
 
                     } else {
+                        Log.d(TAG, "found username, but incorrect password")
                         callback.invoke(false)
                     }
 
 
                 } else {
-                    Log.d("SplashActivity", "No such document")
+                    Log.d(TAG, "No such document")
                     callback.invoke(false)
                 }
             }
             .addOnFailureListener{ exception ->
-                Log.d("SplashActivity", "got failed with ", exception)
+                Log.d(TAG, "got failed with ", exception)
             }
 
     }
 
+    fun addAppointment(data: Appointment) {
+        database.collection("appointments")
+            .add(data)
+            .addOnSuccessListener {
+                Log.d(TAG, "added appointment to database!")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "failed to add appointment to database", e)
+            }
+    }
+
+    /* TODO - figure out a way to make this work with Ted and also handle the Date issue
+    fun getUserAppointments(username: String, callback: (List<Appointment>) -> Unit) {
+        database.collection("appointments")
+            .whereEqualTo("host", username)
+            //.whereArrayContains("invitation", username)
+            .get()
+            .addOnSuccessListener { documents ->
+                val listOfDocuments: MutableList<Appointment> = mutableListOf()
+                for (document in documents) {
+
+                    val appointment = Appointment(
+                        UUID.randomUUID().toString(),
+                        document.data["location"].toString(),
+                        username,
+                        document.data["name"].toString(),
+                        document.data["invitations"] as List<String>,
+                        document.data["startDate"].toString(),
+                        document.data["endDate"].toString()
+                    )
+
+
+                    listOfDocuments.add(appointment)
+                }
+                Log.d(TAG, "Found Appointments!")
+                callback.invoke(listOfDocuments)
+            }
+
+            .addOnFailureListener { e ->
+                Log.e(TAG, "failed to get appointments", e)
+            }
+    }
+     */
     companion object {
         private var INSTANCE: FirebaseClient? = null
 

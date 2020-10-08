@@ -13,6 +13,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.lifeboi.database.FirebaseClient
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
+import java.util.*
+import kotlin.collections.HashMap
 
 private const val REQUEST_HOME_SCREEN = 0
 
@@ -235,6 +238,7 @@ class SignUpFragment: Fragment() {
         passwordEditText.addTextChangedListener(passwordWatcher)
 
         signUpButton.setOnClickListener {
+
             val userAccount = hashMapOf(
                 "first_name" to firstName,
                 "last_name" to lastName,

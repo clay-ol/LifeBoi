@@ -13,6 +13,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.lifeboi.database.FirebaseClient
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
+import java.util.*
 
 private const val REQUEST_HOME_SCREEN = 0
 
@@ -121,6 +123,17 @@ class LoginFragment: Fragment() {
 
         loginButton.setOnClickListener {
 
+            /*
+            val appointment = Appointment(
+                UUID.randomUUID().toString(),
+                "Boston",
+                username,
+                "Party",
+                listOf("user0", "user1", "user2")
+            )
+
+            firebaseClient.addAppointment(appointment)
+            */
             if (!username.equals("") && !password.equals("")) {
                 Log.d("SplashActivity", username)
                 Log.d("SplashActivity", password)
