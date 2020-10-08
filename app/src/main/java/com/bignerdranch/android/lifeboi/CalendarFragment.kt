@@ -23,7 +23,7 @@ class CalendarFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "CalendarFragment onCreate()")
+        Log.d(DEBUG, "CalendarFragment onCreate()")
     }
 
     override fun onAttach( context: Context){

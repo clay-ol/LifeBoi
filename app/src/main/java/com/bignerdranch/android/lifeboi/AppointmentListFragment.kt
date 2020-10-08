@@ -1,5 +1,6 @@
 package com.bignerdranch.android.lifeboi
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -28,11 +29,21 @@ class AppointmentListFragment : Fragment() {
     private lateinit var appointmentRecyclerView: RecyclerView
     private lateinit var appointmentButton: ImageButton
     private var adapter: AppointmentAdapter? = null
-    private var callbacks: CalendarFragment.Callbacks? = null
+    private var callbacks: Callbacks? = null
 
     // TEMPORARY
     private val appointmentListViewModel: AppointmentListViewModel by lazy {
         ViewModelProviders.of(this).get(AppointmentListViewModel::class.java)
+    }
+
+    override fun onAttach( context: Context){
+        super.onAttach(context)
+        callbacks = context as Callbacks?
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        callbacks = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +71,8 @@ class AppointmentListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         appointmentButton.setOnClickListener {
-            callbacks?.onDateSelected()
+            Log.d(DEBUG, "Switching fragments: AppointmentList -> Calendar")
+            callbacks?.onEditSelected()
         }
     }
 

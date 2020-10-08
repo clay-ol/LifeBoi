@@ -34,7 +34,13 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
     }
 
     override fun onEditSelected() {
-        TODO("Not yet implemented")
+        Log.d(DEBUG, "onEditSelected() called")
+        val fragment = CalendarFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_appointment_container, fragment)
+            .addToBackStack( null)
+            .commit()
     }
 
     override fun onDateSelected() {
