@@ -12,7 +12,7 @@ class AppointmentListViewModel : ViewModel() {
     init {
         for(i in 0 until 4) {
             val appointment = Appointment()
-            appointment.Name = "Appointment # ${i + 1}"
+            appointment.name = "Appointment # ${i + 1}"
             appointments += appointment
         }
     }

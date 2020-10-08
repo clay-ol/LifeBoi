@@ -3,14 +3,9 @@ package com.bignerdranch.android.lifeboi.database
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.bignerdranch.android.lifeboi.datamodel.UserAccount
 import com.google.firebase.FirebaseApp
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.concurrent.Executors
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.bignerdranch.android.lifeboi.R
 
 private const val TAG = "StepsFragment"
 
@@ -22,7 +23,7 @@ class StepsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_steps, container, false)
-        stepsView = view.findViewById( R.id.steps ) as TextView
+        stepsView = view.findViewById(R.id.steps) as TextView
         return view
     }
     override fun onStart() {

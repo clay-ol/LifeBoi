@@ -1,4 +1,4 @@
-package com.bignerdranch.android.lifeboi.database
+package com.bignerdranch.android.lifeboi.datamodel
 
 import com.google.firebase.database.IgnoreExtraProperties
 
