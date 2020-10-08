@@ -29,7 +29,7 @@ class FirebaseClient private constructor(context: Context) {
         database.collection("users").document(username)
             .get()
             .addOnSuccessListener { document ->
-                if (document != null) {
+                if (document.exists()) {
                     if (document.get("password")?.equals(password)!!) {
                         callback.invoke(true)
 
