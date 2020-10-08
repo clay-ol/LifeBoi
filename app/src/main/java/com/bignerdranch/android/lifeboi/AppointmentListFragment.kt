@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -19,9 +20,15 @@ private const val TAG = "AppointmentListFragment"
 
 class AppointmentListFragment : Fragment() {
 
+    interface Callbacks {
+        fun onAddSelected()
+        fun onEditSelected()
+    }
+
     private lateinit var appointmentRecyclerView: RecyclerView
-    private lateinit var appointmentButton: Button
+    private lateinit var appointmentButton: ImageButton
     private var adapter: AppointmentAdapter? = null
+    private var callbacks: CalendarFragment.Callbacks? = null
 
     // TEMPORARY
     private val appointmentListViewModel: AppointmentListViewModel by lazy {
@@ -40,7 +47,7 @@ class AppointmentListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_appointment_list, container, false)
 
-        appointmentButton = view.findViewById(R.id.configure_appointment) as Button
+        appointmentButton = view.findViewById(R.id.configure_appointment) as ImageButton
         appointmentRecyclerView = view.findViewById(R.id.appoint_reycler_view) as RecyclerView
         appointmentRecyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -51,6 +58,10 @@ class AppointmentListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        appointmentButton.setOnClickListener {
+            callbacks?.onDateSelected()
+        }
     }
 
     private fun updateUI() {

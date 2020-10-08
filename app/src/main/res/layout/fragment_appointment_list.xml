@@ -12,14 +12,17 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="100dp"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/configure_appointment"
         android:layout_width="100dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="165dp"
         android:layout_marginBottom="10dp"
+        android:background="@null"
         android:gravity="center"
+        android:src="@drawable/add_appointment"
+        android:scaleType="fitCenter"
         android:text="TEST" />
 
 </RelativeLayout>
