@@ -2,42 +2,50 @@ package com.bignerdranch.android.lifeboi.database
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import java.util.concurrent.Executors
 
 
 class FirebaseClient private constructor(context: Context) {
 
-    private val database = Firebase.database
-    private val usersRef = database.getReference("users")
+    private val database = Firebase.firestore
+
+    var users: MutableLiveData<UserAccount> = MutableLiveData()
 
     private val executor = Executors.newSingleThreadExecutor()
 
-    fun onCallback(userAccount: UserAccount?) {
 
-    }
-    fun checkUserAccount(username: String, password: String, myCallback: MyCallback) {
-        val usernameRef = usersRef.child(username)
-        usernameRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                val value = dataSnapshot.getValue<UserAccount>()
-                myCallback.onCallback(value)
+    fun checkLoginPassword(username: String, password: String, callback:(Boolean) -> Unit
+    ) {
+        database.collection("users").document(username)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    if (document.get("password")?.equals(password)!!) {
+                        callback.invoke(true)
+
+                    } else {
+                        callback.invoke(false)
+                    }
 
 
+                } else {
+                    Log.d("SplashActivity", "No such document")
+                    callback.invoke(false)
+                }
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
+            .addOnFailureListener{ exception ->
+                Log.d("SplashActivity", "got failed with ", exception)
             }
-        })
 
     }
 

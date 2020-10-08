@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bignerdranch.android.lifeboi.database.FirebaseClient
 
 class LoginFragment: Fragment() {
 
@@ -20,6 +22,8 @@ class LoginFragment: Fragment() {
     private lateinit var passwordEditText: EditText
     private lateinit var loginButton: Button
     private lateinit var backButton: Button
+
+    private lateinit var firebaseClient: FirebaseClient
 
     interface  Callbacks {
         fun goToSplash()
@@ -39,6 +43,7 @@ class LoginFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firebaseClient = FirebaseClient.get()
     }
 
     override fun onCreateView(
@@ -115,6 +120,19 @@ class LoginFragment: Fragment() {
         loginButton.setOnClickListener {
             Log.d("SplashActivity", username)
             Log.d("SplashActivity", password)
+
+            firebaseClient.checkLoginPassword(username, password) {result ->
+                Log.d("SplashActivity", "Result: ${result}")
+
+                if (result) {
+                    //do something
+
+                } else {
+                    Toast.makeText(activity, "Incorrect Username or Password!", Toast.LENGTH_LONG).show()
+                }
+            }
+
+
         }
 
         backButton.setOnClickListener {

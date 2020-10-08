@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import com.bignerdranch.android.lifeboi.database.FirebaseClient
 
 class SignUpFragment: Fragment() {
 
@@ -19,7 +20,7 @@ class SignUpFragment: Fragment() {
     private lateinit var firstName: String
     private lateinit var lastName: String
     private lateinit var email: String
-    private var phoneNumber = -1
+    private lateinit var phoneNumber: String
     private lateinit var password: String
     private lateinit var userNameEditText: EditText
     private lateinit var firstNameEditText: EditText
@@ -29,6 +30,8 @@ class SignUpFragment: Fragment() {
     private lateinit var passwordEditText: EditText
     private lateinit var signUpButton: Button
     private lateinit var backButton: Button
+
+    private lateinit var firebaseClient: FirebaseClient
 
     interface  Callbacks {
         fun goToSplash()
@@ -48,6 +51,7 @@ class SignUpFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        firebaseClient = FirebaseClient.get()
     }
 
     override fun onCreateView(
@@ -188,7 +192,7 @@ class SignUpFragment: Fragment() {
                 before: Int,
                 count: Int
             ) {
-                phoneNumber = sequence.toString().toInt()
+                phoneNumber = sequence.toString()
             }
 
             override fun afterTextChanged(sequence: Editable?) {
