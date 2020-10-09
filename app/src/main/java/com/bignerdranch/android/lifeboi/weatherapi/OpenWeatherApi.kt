@@ -9,10 +9,10 @@ interface OpenWeatherApi {
 //            + "lat=" + "42.2626"
 //        + "&lon=" + "71.8023"
 //        + "&exclude=" + "minutely"
-//        + "&appid=" + "bd0d6f55a110a7763eda5a7c0ada5e1e")
+//        + "&appid=" + "
     @GET("https://api.openweathermap.org/data/2.5/weather?q=" +
             "Worcester" +
-            "&appid=bd0d6f55a110a7763eda5a7c0ada5e1e" +
+            "&appid=FIGURE IT OUT" +
             "&format=json" +
             "&nojsoncallback=1" +
             "&extras=url_s")
