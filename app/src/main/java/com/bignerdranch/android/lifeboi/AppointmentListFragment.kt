@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -14,8 +13,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bignerdranch.android.lifeboi.database.FirebaseClient
 import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentListViewModel
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.database.DatabaseReference
+
 
 private const val TAG = "AppointmentListFragment"
 
@@ -29,6 +35,9 @@ class AppointmentListFragment : Fragment() {
     private lateinit var appointmentRecyclerView: RecyclerView
     private lateinit var appointmentButton: ImageButton
     private var adapter: AppointmentAdapter? = null
+    private lateinit var database: DatabaseReference
+
+
     private var callbacks: Callbacks? = null
 
     // TEMPORARY
@@ -36,7 +45,7 @@ class AppointmentListFragment : Fragment() {
         ViewModelProviders.of(this).get(AppointmentListViewModel::class.java)
     }
 
-    override fun onAttach( context: Context){
+    override fun onAttach(context: Context){
         super.onAttach(context)
         callbacks = context as Callbacks?
     }
@@ -77,23 +86,28 @@ class AppointmentListFragment : Fragment() {
     }
 
     private fun updateUI() {
-        val appointments = appointmentListViewModel.appointments
-        adapter = AppointmentAdapter(appointments)
+//        val appointments = appointmentListViewModel.appointments
+
+        val db = FirebaseClient.get().getDatabase()
+        val query = db.collection("appointments").whereEqualTo("host", "johndoe")
+
+        val options: FirestoreRecyclerOptions<Appointment> = FirestoreRecyclerOptions.Builder<Appointment>()
+            .setLifecycleOwner(this)
+            .setQuery(query, Appointment::class.java)
+            .build()
+
+        val adapter = AppointmentAdapter(options)
         appointmentRecyclerView.adapter = adapter
     }
 
-    private inner class AppointmentAdapter(var appoints: List<Appointment>) : RecyclerView.Adapter<AppointmentHolder>() {
+
+    private inner class AppointmentAdapter(var appoints: FirestoreRecyclerOptions<Appointment>) : FirestoreRecyclerAdapter<Appointment, AppointmentHolder>(appoints) {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppointmentHolder {
             val view = layoutInflater.inflate(R.layout.list_item_appointment, parent, false)
             return AppointmentHolder(view)
         }
 
-        override fun getItemCount(): Int {
-            return appoints.size
-        }
-
-        override fun onBindViewHolder(holder: AppointmentHolder, position: Int) {
-            val appointment = appoints[position]
+        override fun onBindViewHolder(holder: AppointmentHolder, position: Int, appointment: Appointment) {
             holder.bind(appointment)
         }
     }

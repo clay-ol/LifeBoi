@@ -1,6 +1,5 @@
 package com.bignerdranch.android.lifeboi
 
-import android.app.Activity
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -9,14 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.CalendarView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
-import com.bignerdranch.android.lifeboi.viewModels.AppointmentListViewModel
 import java.time.LocalDate
 
 private const val CHOSEN_DATE = "date_of_choice"

@@ -59,7 +59,6 @@ class CalendarFragment : Fragment() {
         appointmentCalendar?.setOnDateChangeListener {view, year, month, dayOfMonth ->
 
             val date = LocalDate.of(year, month + 1, dayOfMonth)
-            val localDate = LocalDate.now()
 
             if(date.isBefore(LocalDate.now())) {
                 Toast.makeText(context, "Cannot go back to the past...", Toast.LENGTH_SHORT).show()
