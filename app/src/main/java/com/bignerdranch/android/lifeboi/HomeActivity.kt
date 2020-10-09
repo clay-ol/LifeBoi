@@ -2,8 +2,10 @@ package com.bignerdranch.android.lifeboi
 
 import android.content.Context
 import android.content.Intent
+import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 
 const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
 private const val REQUEST_EVENT_SCREEN = 10
