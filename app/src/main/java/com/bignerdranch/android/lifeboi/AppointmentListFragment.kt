@@ -72,7 +72,7 @@ class AppointmentListFragment : Fragment() {
 
         appointmentButton.setOnClickListener {
             Log.d(DEBUG, "Switching fragments: AppointmentList -> Calendar")
-            callbacks?.onEditSelected()
+            callbacks?.onAddSelected()
         }
     }
 

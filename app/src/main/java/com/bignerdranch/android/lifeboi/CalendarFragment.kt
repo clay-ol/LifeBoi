@@ -1,20 +1,25 @@
 package com.bignerdranch.android.lifeboi
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import java.time.LocalDate
+import java.util.*
 
 private const val TAG = "CalendarFragment"
 
 class CalendarFragment : Fragment() {
 
     interface Callbacks {
-        fun onDateSelected()
+        fun onDateSelected(date: LocalDate)
     }
 
     private lateinit var appointmentCalendar: CalendarView
@@ -47,12 +52,20 @@ class CalendarFragment : Fragment() {
         return view
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         appointmentCalendar?.setOnDateChangeListener {view, year, month, dayOfMonth ->
-            Log.d(DEBUG, "TEST")
-            callbacks?.onDateSelected()
+
+            val date = LocalDate.of(year, month + 1, dayOfMonth)
+            val localDate = LocalDate.now()
+
+            if(date.isBefore(LocalDate.now())) {
+                Toast.makeText(context, "Cannot go back to the past...", Toast.LENGTH_SHORT).show()
+            } else {
+                callbacks?.onDateSelected(date)
+            }
         }
     }
 

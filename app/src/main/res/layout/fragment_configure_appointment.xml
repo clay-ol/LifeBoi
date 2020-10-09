@@ -50,17 +50,14 @@
             android:layout_marginTop="50dp"
             android:hint="Invitations"/>
 
+        <Button
+            android:id="@+id/appointment_submit"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="100dp"
+            />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/appointment_submit"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        />
-
-
 </RelativeLayout>
