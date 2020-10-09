@@ -16,7 +16,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:hint="Start"/>
+            android:hint="Start"
+            android:lines="1"
+            android:maxLength="20"/>
 
         <EditText
             android:id="@+id/appointment_end"
@@ -24,7 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:hint="End"/>
+            android:hint="End"
+            android:lines="1"
+            android:maxLength="20"/>
 
         <EditText
             android:id="@+id/appointment_name"
@@ -32,7 +36,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:hint="Name of Event"/>
+            android:hint="Name of Event"
+            android:lines="1"
+            android:maxLength="50"/>
 
         <EditText
             android:id="@+id/appointment_location"
@@ -40,15 +46,20 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:hint="Location"/>
+            android:hint="Location"
+            android:lines="1"
+            android:maxLength="150"/>
 
+<!--        Will be changed to be appropriate to task-->
         <EditText
             android:id="@+id/appointment_invite"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:hint="Invitations"/>
+            android:hint="Invitations"
+            android:lines="1"
+            android:maxLength="20"/>
 
         <Button
             android:id="@+id/appointment_submit"
