@@ -1,11 +1,13 @@
 package com.bignerdranch.android.lifeboi.database
 
 import android.content.Context
+import android.renderscript.Script
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.datamodel.UserAccount
 import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
@@ -22,6 +24,10 @@ class FirebaseClient private constructor(context: Context) {
 
     private val executor = Executors.newSingleThreadExecutor()
 
+    fun getDatabase() : FirebaseFirestore {
+        return database
+    }
+    
     fun signUp(data: HashMap<String, String>, username: String) {
         database.collection("users").document(username)
             .set(data)

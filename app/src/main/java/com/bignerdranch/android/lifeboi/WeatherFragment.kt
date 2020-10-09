@@ -41,9 +41,9 @@ class WeatherFragment : Fragment() {
         latText = view.findViewById(R.id.latitude) as TextView
         longText = view.findViewById(R.id.latitude) as TextView
 
-//        locationManager?.let{ this.locationManager =
-//            context.getSystemService( Context.LOCATION_SERVICE )
-//        }
+        locationManager?.let{ this.locationManager =
+            context?.getSystemService( Context.LOCATION_SERVICE ) as LocationManager
+        }
 
         val currentWeatherData: LiveData<WeatherItem> = WeatherFetcher().fetchWeather()
         currentWeatherData.observe(
@@ -58,6 +58,5 @@ class WeatherFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
     }
 }
