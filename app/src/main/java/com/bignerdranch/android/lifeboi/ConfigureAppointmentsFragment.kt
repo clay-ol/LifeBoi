@@ -1,11 +1,8 @@
 package com.bignerdranch.android.lifeboi
 
 import android.app.Activity
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,10 +20,11 @@ import androidx.lifecycle.ViewModelProviders
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
 import java.time.LocalDate
 
+
 private const val CHOSEN_DATE = "date_of_choice"
 private const val ELECTED_DATE = "is_start_date"
-private const val CONTACT = 5
-//private const val END_DATE = "end_date"
+private const val CONTACT = 1
+private const val END_DATE = "end_date"
 
 class ConfigureAppointmentsFragment : Fragment() {
 
@@ -50,11 +48,14 @@ class ConfigureAppointmentsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Log.d(DEBUG, "ConfigureAppointments onCreate()")
 
         chosenDate = arguments?.getSerializable(CHOSEN_DATE) as LocalDate
         dateType = arguments?.getSerializable(ELECTED_DATE) as Int
-        appointmentConfigureViewModel = activity?.let { ViewModelProviders.of(it).get(AppointmentConfigureViewModel::class.java) }!!
+        appointmentConfigureViewModel = activity?.let { ViewModelProviders.of(it).get(
+            AppointmentConfigureViewModel::class.java
+        ) }!!
 
 
         when (dateType) {
@@ -67,6 +68,60 @@ class ConfigureAppointmentsFragment : Fragment() {
         }
 
         Log.d(DEBUG, "Received $chosenDate")
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+        startDateEditText.apply {
+            isFocusable = false
+            setOnClickListener {
+                callbacks?.onDatePickSelected(1)
+            }
+        }
+
+        endDateEditText.apply {
+            isFocusable = false
+            setOnClickListener {
+                callbacks?.onDatePickSelected(2)
+            }
+        }
+
+        locationEditText.setOnClickListener {
+
+        }
+
+        submitButton.setOnClickListener {
+            if(startDateEditText.text.isEmpty() || endDateEditText.text.isEmpty()
+                || nameEditText.text.isEmpty()) {
+                Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
+            } else {
+                // TODO: write to db
+            }
+
+            Log.d(DEBUG, "Submit button worked")
+
+        }
+
+        invitationEditText.apply {
+            isFocusable = false
+            val pickContactIntent = Intent(
+                Intent.ACTION_PICK,
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+            )
+
+            setOnClickListener {
+                startActivityForResult(pickContactIntent, CONTACT)
+            }
+
+//            val packageManager: PackageManager = requireActivity().packageManager
+//            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+//
+//            if(resolvedAct == null) {
+//                isEnabled = false
+//            }
+        }
     }
 
     override fun onCreateView(
@@ -87,116 +142,99 @@ class ConfigureAppointmentsFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        Log.d(DEBUG, "Received: $resultCode, $requestCode")
+//        super.onActivityResult(requestCode, resultCode, data)
+//        Log.d(DEBUG, "Received: $resultCode, $requestCode")
+        var invitee = ""
+        var phoneNum = ""
 
         when {
             resultCode != Activity.RESULT_OK -> return
 
             requestCode == CONTACT && data != null -> {
-                val contactUri: Uri? = data.data
 
-                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
-                val queryFieldsID = arrayOf(ContactsContract.Contacts._ID)
+                val phones = requireActivity().contentResolver.query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+                )
+                if (phones != null) {
+                    while (phones.moveToNext()) {
+                        val contactName: String =
+                            phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                        val contactNumber: String =
+                            phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
 
+                        Log.d(DEBUG, "$contactName, $contactNumber")
 
-                val cursor = contactUri?.let { requireActivity().contentResolver.query(it, queryFields, null, null, null) }
-                cursor?.use {
-                    if(it.count == 0) {
-                        return
-                    }
-
-                    it.moveToFirst()
-                    val invitee = it.getString(0)
-                    Log.d(DEBUG, "Received: $invitee")
-
-                }
-
-                val cursorID = requireActivity().contentResolver.query(contactUri!!, queryFieldsID, null, null, null)
-                cursorID?.use {
-                    if(it.count == 0) {
-                        return
-                    }
-
-                    it.moveToFirst()
-                    val contactId = it.getString(0)
-
-                    val phoneURI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
-                    val phoneNumberQueryFields = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
-
-                    val phoneWhere = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = ?"
-
-                    val phoneQueryParam = arrayOf(contactId)
-
-                    val phoneCursor = requireActivity().contentResolver.query(phoneURI, phoneNumberQueryFields, phoneWhere, phoneQueryParam, null)
-                    phoneCursor?.use { cursorPhone ->
-                        cursorPhone.moveToFirst()
-                        val phoneNum = cursorPhone.getString(0)
-                        Log.d(DEBUG, "RECV: $phoneNum")
                     }
                 }
+                phones?.close()
+
             }
 
         }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        startDateEditText.apply {
-            isFocusable = false
-            setOnClickListener {
-                callbacks?.onDatePickSelected(1)
-            }
-        }
-
-        endDateEditText.apply {
-            isFocusable = false
-            setOnClickListener {
-                callbacks?.onDatePickSelected(2)
-            }
-        }
-
-        invitationEditText.apply {
-            isFocusable = false
-            val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
-
-            setOnClickListener {
-                startActivityForResult(intent, CONTACT)
-            }
-
-//            val packageManager: PackageManager = requireActivity().packageManager
-//            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-//
-//            if(resolvedAct == null) {
-//                isEnabled = false
+//        startDateEditText.apply {
+//            isFocusable = false
+//            setOnClickListener {
+//                callbacks?.onDatePickSelected(1)
 //            }
-        }
+//        }
+//
+//        endDateEditText.apply {
+//            isFocusable = false
+//            setOnClickListener {
+//                callbacks?.onDatePickSelected(2)
+//            }
+//        }
 
-        locationEditText.setOnClickListener {
+//        invitationEditText.apply {
+//            isFocusable = false
+//            val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+//
+//            setOnClickListener {
+//                startActivityForResult(intent, CONTACT)
+//            }
+//
+////            val packageManager: PackageManager = requireActivity().packageManager
+////            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+////
+////            if(resolvedAct == null) {
+////                isEnabled = false
+////            }
+//        }
 
-        }
-
-        submitButton.setOnClickListener {
-            if(startDateEditText.text.isEmpty() || endDateEditText.text.isEmpty()
-                || nameEditText.text.isEmpty()) {
-                Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
-            } else {
-                // TODO: write to db
-            }
-
-            Log.d(DEBUG, "Submit button worked")
-
-        }
+//        locationEditText.setOnClickListener {
+//
+//        }
+//
+//        submitButton.setOnClickListener {
+//            if(startDateEditText.text.isEmpty() || endDateEditText.text.isEmpty()
+//                || nameEditText.text.isEmpty()) {
+//                Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
+//            } else {
+//                // TODO: write to db
+//            }
+//
+//            Log.d(DEBUG, "Submit button worked")
+//
+//        }
 
         startDateEditText.setText(appointmentConfigureViewModel.startDate)
         endDateEditText.setText(appointmentConfigureViewModel.endDate)
 
-        Log.d(DEBUG, "${appointmentConfigureViewModel.startDate}, ${appointmentConfigureViewModel.endDate}")
+//        Log.d(DEBUG, "${appointmentConfigureViewModel.startDate}, ${appointmentConfigureViewModel.endDate}")
 
     }
 
-    override fun onAttach( context: Context){
+    override fun onAttach(context: Context){
         super.onAttach(context)
         callbacks = context as Callbacks
     }
