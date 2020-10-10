@@ -16,11 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.lifeboi.database.FirebaseClient
 import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentListViewModel
-import com.firebase.ui.database.FirebaseRecyclerAdapter
-import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.database.DatabaseReference
 
 
 private const val TAG = "AppointmentListFragment"
@@ -34,10 +31,8 @@ class AppointmentListFragment : Fragment() {
 
     private lateinit var appointmentRecyclerView: RecyclerView
     private lateinit var appointmentButton: ImageButton
+
     private var adapter: AppointmentAdapter? = null
-    private lateinit var database: DatabaseReference
-
-
     private var callbacks: Callbacks? = null
 
     // TEMPORARY

@@ -1,8 +1,15 @@
 package com.bignerdranch.android.lifeboi
 
+import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +25,7 @@ import java.time.LocalDate
 
 private const val CHOSEN_DATE = "date_of_choice"
 private const val ELECTED_DATE = "is_start_date"
+private const val CONTACT = 5
 //private const val END_DATE = "end_date"
 
 class ConfigureAppointmentsFragment : Fragment() {
@@ -78,6 +86,60 @@ class ConfigureAppointmentsFragment : Fragment() {
         return view
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.d(DEBUG, "Received: $resultCode, $requestCode")
+
+        when {
+            resultCode != Activity.RESULT_OK -> return
+
+            requestCode == CONTACT && data != null -> {
+                val contactUri: Uri? = data.data
+
+                val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+                val queryFieldsID = arrayOf(ContactsContract.Contacts._ID)
+
+
+                val cursor = contactUri?.let { requireActivity().contentResolver.query(it, queryFields, null, null, null) }
+                cursor?.use {
+                    if(it.count == 0) {
+                        return
+                    }
+
+                    it.moveToFirst()
+                    val invitee = it.getString(0)
+                    Log.d(DEBUG, "Received: $invitee")
+
+                }
+
+                val cursorID = requireActivity().contentResolver.query(contactUri!!, queryFieldsID, null, null, null)
+                cursorID?.use {
+                    if(it.count == 0) {
+                        return
+                    }
+
+                    it.moveToFirst()
+                    val contactId = it.getString(0)
+
+                    val phoneURI = ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+                    val phoneNumberQueryFields = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+
+                    val phoneWhere = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} = ?"
+
+                    val phoneQueryParam = arrayOf(contactId)
+
+                    val phoneCursor = requireActivity().contentResolver.query(phoneURI, phoneNumberQueryFields, phoneWhere, phoneQueryParam, null)
+                    phoneCursor?.use { cursorPhone ->
+                        cursorPhone.moveToFirst()
+                        val phoneNum = cursorPhone.getString(0)
+                        Log.d(DEBUG, "RECV: $phoneNum")
+                    }
+                }
+            }
+
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -95,6 +157,22 @@ class ConfigureAppointmentsFragment : Fragment() {
             }
         }
 
+        invitationEditText.apply {
+            isFocusable = false
+            val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
+
+            setOnClickListener {
+                startActivityForResult(intent, CONTACT)
+            }
+
+//            val packageManager: PackageManager = requireActivity().packageManager
+//            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+//
+//            if(resolvedAct == null) {
+//                isEnabled = false
+//            }
+        }
+
         locationEditText.setOnClickListener {
 
         }
@@ -104,6 +182,7 @@ class ConfigureAppointmentsFragment : Fragment() {
                 || nameEditText.text.isEmpty()) {
                 Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
             } else {
+                // TODO: write to db
             }
 
             Log.d(DEBUG, "Submit button worked")
