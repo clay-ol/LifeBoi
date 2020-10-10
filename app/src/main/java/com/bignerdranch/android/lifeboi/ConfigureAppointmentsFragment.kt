@@ -1,8 +1,14 @@
 package com.bignerdranch.android.lifeboi
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Service
 import android.content.Context
+import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,8 +21,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.bignerdranch.android.lifeboi.twilioapi.TextMessenger
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
 import java.time.LocalDate
 
@@ -24,6 +32,7 @@ import java.time.LocalDate
 private const val CHOSEN_DATE = "date_of_choice"
 private const val ELECTED_DATE = "is_start_date"
 private const val CONTACT = 1
+private const val GPS_LOCATION = 2
 private const val END_DATE = "end_date"
 
 class ConfigureAppointmentsFragment : Fragment() {
@@ -71,6 +80,7 @@ class ConfigureAppointmentsFragment : Fragment() {
     }
 
 
+    @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
 
@@ -88,8 +98,27 @@ class ConfigureAppointmentsFragment : Fragment() {
             }
         }
 
-        locationEditText.setOnClickListener {
-
+        locationEditText.apply {
+            // TODO: for now leave it as it is...
+            isFocusable = false
+//            val locationManager = activity?.getSystemService(LOCATION_SERVICE) as LocationManager
+//            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+//            var gmmLocation = ""
+//
+//            gmmLocation = if(location?.latitude != null && location.longitude != null) {
+//                "geo:" + location.latitude + "," + location.longitude
+//            } else {
+//                "geo:42.66999,-72.321"
+//            }
+//
+//            val gmmLocationUri = Uri.parse(gmmLocation)
+//            val locationIntent = Intent(Intent.ACTION_VIEW, gmmLocationUri).setPackage("com.google.android.apps.maps")
+            setOnClickListener {
+                val msg = TextMessenger.newInstance()
+                msg.send("7603358848", "HI TED")
+//                startActivityForResult(locationIntent, GPS_LOCATION)
+//                Log.d(DEBUG, "${location?.longitude}")
+            }
         }
 
         submitButton.setOnClickListener {
@@ -97,6 +126,7 @@ class ConfigureAppointmentsFragment : Fragment() {
                 || nameEditText.text.isEmpty()) {
                 Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
             } else {
+
                 // TODO: write to db
             }
 
@@ -108,7 +138,6 @@ class ConfigureAppointmentsFragment : Fragment() {
             isFocusable = false
             val pickContactIntent = Intent(
                 Intent.ACTION_PICK,
-//                ContactsContract.CommonDataKinds.Phone.CONTENT_URI
                 ContactsContract.Contacts.CONTENT_URI
             )
 
@@ -182,9 +211,7 @@ class ConfigureAppointmentsFragment : Fragment() {
                         Log.d(DEBUG, "$suspect, $name")
 
                     }
-
             }
-
         }
 
     }
@@ -192,56 +219,8 @@ class ConfigureAppointmentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        startDateEditText.apply {
-//            isFocusable = false
-//            setOnClickListener {
-//                callbacks?.onDatePickSelected(1)
-//            }
-//        }
-//
-//        endDateEditText.apply {
-//            isFocusable = false
-//            setOnClickListener {
-//                callbacks?.onDatePickSelected(2)
-//            }
-//        }
-
-//        invitationEditText.apply {
-//            isFocusable = false
-//            val intent = Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
-//
-//            setOnClickListener {
-//                startActivityForResult(intent, CONTACT)
-//            }
-//
-////            val packageManager: PackageManager = requireActivity().packageManager
-////            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-////
-////            if(resolvedAct == null) {
-////                isEnabled = false
-////            }
-//        }
-
-//        locationEditText.setOnClickListener {
-//
-//        }
-//
-//        submitButton.setOnClickListener {
-//            if(startDateEditText.text.isEmpty() || endDateEditText.text.isEmpty()
-//                || nameEditText.text.isEmpty()) {
-//                Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
-//            } else {
-//                // TODO: write to db
-//            }
-//
-//            Log.d(DEBUG, "Submit button worked")
-//
-//        }
-
         startDateEditText.setText(appointmentConfigureViewModel.startDate)
         endDateEditText.setText(appointmentConfigureViewModel.endDate)
-
-//        Log.d(DEBUG, "${appointmentConfigureViewModel.startDate}, ${appointmentConfigureViewModel.endDate}")
 
     }
 

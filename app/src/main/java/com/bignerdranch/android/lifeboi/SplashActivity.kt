@@ -1,5 +1,6 @@
 package com.bignerdranch.android.lifeboi
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,6 +14,7 @@ import androidx.core.content.ContextCompat
 const val DEBUG = "LIFEBOI"
 private const val TAG = "SplashActivity"
 private const val PERMISSION_REQUEST_CODE = 1
+private const val PERMISSION_REQUEST_CODE_GPS = 2
 private const val REQUEST_HOME_SCREEN = 0
 
 
@@ -37,11 +39,31 @@ class SplashActivity : AppCompatActivity(), SplashFragment.Callbacks, LoginFragm
             requestPermission()
         }
 
+        if(!checkGPSPermission()) {
+            requestGPSPermission()
+        }
+
     }
 
-    private fun checkPermission(): Boolean {
-        val result = ContextCompat.checkSelfPermission(this, READ_CONTACTS)
+    private fun checkGPSPermission(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
         return result == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestGPSPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                ACCESS_FINE_LOCATION
+            )
+        ) {
+            Toast.makeText(this, "read contact permission.", Toast.LENGTH_LONG).show()
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(ACCESS_FINE_LOCATION),
+                PERMISSION_REQUEST_CODE_GPS
+            )
+        }
     }
 
     private fun requestPermission() {
@@ -58,6 +80,11 @@ class SplashActivity : AppCompatActivity(), SplashFragment.Callbacks, LoginFragm
                 PERMISSION_REQUEST_CODE
             )
         }
+    }
+
+    private fun checkPermission(): Boolean {
+        val result = ContextCompat.checkSelfPermission(this, READ_CONTACTS)
+        return result == PackageManager.PERMISSION_GRANTED
     }
 
     override fun goToLogin() {
