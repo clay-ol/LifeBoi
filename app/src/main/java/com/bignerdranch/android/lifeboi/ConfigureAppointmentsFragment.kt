@@ -108,7 +108,8 @@ class ConfigureAppointmentsFragment : Fragment() {
             isFocusable = false
             val pickContactIntent = Intent(
                 Intent.ACTION_PICK,
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+//                ContactsContract.CommonDataKinds.Phone.CONTENT_URI
+                ContactsContract.Contacts.CONTENT_URI
             )
 
             setOnClickListener {
@@ -116,7 +117,7 @@ class ConfigureAppointmentsFragment : Fragment() {
             }
 
 //            val packageManager: PackageManager = requireActivity().packageManager
-//            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+//            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(pickContactIntent, PackageManager.MATCH_DEFAULT_ONLY)
 //
 //            if(resolvedAct == null) {
 //                isEnabled = false
@@ -142,35 +143,45 @@ class ConfigureAppointmentsFragment : Fragment() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        Log.d(DEBUG, "Received: $resultCode, $requestCode")
-        var invitee = ""
-        var phoneNum = ""
-
         when {
             resultCode != Activity.RESULT_OK -> return
 
             requestCode == CONTACT && data != null -> {
 
-                val phones = requireActivity().contentResolver.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    null,
-                    null,
-                    null
-                )
-                if (phones != null) {
-                    while (phones.moveToNext()) {
-                        val contactName: String =
-                            phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
-                        val contactNumber: String =
-                            phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    val contactUri: Uri? = data.data
+                    val queryFields = arrayOf(ContactsContract.Contacts.DISPLAY_NAME)
+                    val cursor = contactUri?.let {
+                        requireActivity().contentResolver
+                            .query(it, queryFields, null, null, null)
+                    }
+                    cursor?.use {
+                        if (it.count == 0) {
+                            return
+                        }
 
-                        Log.d(DEBUG, "$contactName, $contactNumber")
+                        it.moveToFirst()
+                        val suspect = it.getString(0)
+
+                        var name = ""
+
+                        val selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + suspect + "%'"
+                        val projection = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                        val c = context!!.contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            projection, selection, null, null
+                        )
+                        if (c?.moveToFirst()!!) {
+                            if (c != null) {
+                                name = c.getString(0)
+                            }
+                        }
+                        c?.close()
+                        if (name == "") name = "This contact is not saved into your device"
+
+                        // TODO: update invitation field
+                        Log.d(DEBUG, "$suspect, $name")
 
                     }
-                }
-                phones?.close()
 
             }
 
