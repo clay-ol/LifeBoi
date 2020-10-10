@@ -8,4 +8,5 @@ class Appointment(var id: String = UUID.randomUUID().toString(),
                        var name: String = "",
                        var invitations: List<String> = emptyList(),
                        var startDate: String = "",
-                       var endDate: String = "")
+                       var endDate: String = "",
+                       var isInvitee: Boolean = false)

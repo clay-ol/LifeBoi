@@ -39,13 +39,19 @@ class FirebaseClient private constructor(context: Context) {
             }
     }
 
-    fun checkForExistingUser(username: String, callback: (Boolean) -> Unit) {
+    fun checkForExistingUser(username: String, phonenumber: String, callback: (Boolean) -> Unit) {
         database.collection("users").document(username)
             .get()
             .addOnSuccessListener { document ->
                 if (!document.exists()) {
-                    callback.invoke(true)
-                    Log.d(TAG, "No Existing Username: ${username} Found")
+                    if (document.getString("phone_number").equals(phonenumber)) {
+                        Log.d(TAG, "No Existing Username: ${username} and Phone Number: ${phonenumber} Found")
+                        callback.invoke(true)
+
+                    } else {
+                        Log.d(TAG, "Unique Username: ${username}, but Existing Phone Number: ${phonenumber} Found")
+                        callback.invoke(false)
+                    }
                 } else {
                     Log.d(TAG, "Found Existing Username: ${username}")
                     callback.invoke(false)
