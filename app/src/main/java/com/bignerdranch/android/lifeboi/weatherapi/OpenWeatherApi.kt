@@ -11,7 +11,7 @@ interface OpenWeatherApi{
             + "lat=" + "42.2626"
         + "&lon=" + "-71.8023"
         + "&exclude=" + "minutely"
-        + "&appid=" + "API Key Goes here" )
+        + "&appid=" + "" )
 
 
     fun fetchWeather(): Call<WeatherResponse>
