@@ -40,7 +40,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
         sensorManager = getSystemService( Context.SENSOR_SERVICE ) as SensorManager
         locationManager = getSystemService( Context.LOCATION_SERVICE ) as LocationManager
 //        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, minTime)
-
+        getLocation()
 
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
