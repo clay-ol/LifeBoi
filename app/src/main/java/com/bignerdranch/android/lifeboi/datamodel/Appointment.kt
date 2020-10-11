@@ -9,4 +9,5 @@ class Appointment(var id: String = UUID.randomUUID().toString(),
                        var invitations: List<String> = emptyList(),
                        var startDate: String = "",
                        var endDate: String = "",
-                       var isInvitee: Boolean = false)
+                       var isInvitee: Boolean = false,
+                       var phoneNumber: String = "")

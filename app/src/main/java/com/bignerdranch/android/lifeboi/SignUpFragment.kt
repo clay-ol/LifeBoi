@@ -18,7 +18,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 private const val REQUEST_HOME_SCREEN = 0
-
+private const val TAG = "LoginInfo"
 class SignUpFragment: Fragment() {
 
     private var username = ""

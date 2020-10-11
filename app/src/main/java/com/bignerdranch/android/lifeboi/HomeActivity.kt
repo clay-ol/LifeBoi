@@ -5,6 +5,7 @@ import android.content.Intent
 import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 
 const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
@@ -18,6 +19,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
         setContentView(R.layout.activity_home)
 
         username = intent.getStringExtra(EXTRA_USER_FOUND).toString()
+        Log.d("HomeActivity", "Got Username: ${username}")
 
 
         val currentFragment =
@@ -53,7 +55,8 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
     }
 
     override fun onEventSelected() {
-        val intent = AppointmentActivity.newIntent(this@HomeActivity)
+        Log.d("HomeActivity", "Passing Username: $username to AppointmentActivity")
+        val intent = AppointmentActivity.newIntent(this@HomeActivity, username)
         startActivityForResult(intent, REQUEST_EVENT_SCREEN)
     }
 

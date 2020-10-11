@@ -21,6 +21,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
 
 private const val TAG = "AppointmentListFragment"
+private const val ARG_USERNAME = "username"
 
 class AppointmentListFragment : Fragment() {
 
@@ -34,6 +35,8 @@ class AppointmentListFragment : Fragment() {
 
     private var adapter: AppointmentAdapter? = null
     private var callbacks: Callbacks? = null
+
+    private var username = ""
 
     // TEMPORARY
     private val appointmentListViewModel: AppointmentListViewModel by lazy {
@@ -52,7 +55,10 @@ class AppointmentListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        username = arguments?.getSerializable(ARG_USERNAME) as String
+
         Log.d(DEBUG, "appointmentlist")
+        Log.d(TAG, "Got username: ${username}")
     }
 
     override fun onCreateView(
@@ -84,7 +90,8 @@ class AppointmentListFragment : Fragment() {
 //        val appointments = appointmentListViewModel.appointments
 
         val db = FirebaseClient.get().getDatabase()
-        val query = db.collection("appointments").whereEqualTo("host", "johndoe")
+        Log.d("FirebaseClient", "RecyclerView Username: $username")
+        val query = db.collection("appointments").whereEqualTo("host", username)
 
         val options: FirestoreRecyclerOptions<Appointment> = FirestoreRecyclerOptions.Builder<Appointment>()
             .setLifecycleOwner(this)
@@ -127,8 +134,13 @@ class AppointmentListFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance() : AppointmentListFragment {
-            return AppointmentListFragment()
+        fun newInstance(username: String) : AppointmentListFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_USERNAME, username)
+            }
+            return AppointmentListFragment().apply {
+                arguments = args
+            }
         }
     }
 }
