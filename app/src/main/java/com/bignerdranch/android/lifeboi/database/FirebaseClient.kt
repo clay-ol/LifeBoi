@@ -20,10 +20,6 @@ class FirebaseClient private constructor(context: Context) {
     private val TAG = "FirebaseClient"
     private val database = Firebase.firestore
 
-    var users: MutableLiveData<UserAccount> = MutableLiveData()
-
-    private val executor = Executors.newSingleThreadExecutor()
-
     fun getDatabase() : FirebaseFirestore {
         return database
     }
@@ -64,8 +60,7 @@ class FirebaseClient private constructor(context: Context) {
     }
 
 
-    fun checkLoginPassword(username: String, password: String, callback:(Boolean) -> Unit
-    ) {
+    fun checkLoginPassword(username: String, password: String, callback:(Boolean) -> Unit) {
         database.collection("users").document(username)
             .get()
             .addOnSuccessListener { document ->

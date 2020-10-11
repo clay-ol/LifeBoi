@@ -44,7 +44,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         username = arguments?.getSerializable(ARG_USERNAME) as String
 
-        Log.d(TAG, "Got username: ${username}")
+        Log.d(TAG, "Got username: $username")
     }
 
     override fun onCreateView(

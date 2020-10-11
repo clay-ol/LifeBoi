@@ -16,15 +16,21 @@ import com.bignerdranch.android.lifeboi.R
 import androidx.core.content.ContextCompat.getSystemService
 
 private const val TAG = "StepsFragment"
+private const val STEPS_ARG_USERNAME = "username"
 
 class StepsFragment : Fragment(), SensorEventListener {
 
     private lateinit var stepsView: TextView
     var isRunning = false
     var sensorManager:SensorManager? = null
+    private var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        username = arguments?.getSerializable(STEPS_ARG_USERNAME) as String
+
+        Log.d(TAG, "Got username: $username")
     }
 
     override fun onCreateView(
@@ -67,6 +73,18 @@ class StepsFragment : Fragment(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         if( isRunning ) {
             stepsView.setText( "" + event.values[0] )
+        }
+    }
+
+    companion object {
+        fun newInstance(username: String): StepsFragment {
+            val args = Bundle().apply {
+                putSerializable(STEPS_ARG_USERNAME, username)
+            }
+
+            return StepsFragment().apply{
+                arguments = args
+            }
         }
     }
 }
