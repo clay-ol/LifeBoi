@@ -81,6 +81,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
     override fun onSensorChanged( event: SensorEvent ) {
         if( running ) {
             steps = event.values[0].roundToInt()
+            Log.d( TAG, "steps: ${steps}" )
         }
     }
 
