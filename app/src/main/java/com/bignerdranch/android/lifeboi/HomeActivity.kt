@@ -134,6 +134,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
             if (locationGPS != null) {
                 latitude = locationGPS.latitude
                 longitude = locationGPS.longitude
+                Log.d( TAG, "Location received: Latitude - ${latitude}, Longitude - ${longitude}" )
             } else {
                 latitude = 42.2626
                 longitude = -71.8023
