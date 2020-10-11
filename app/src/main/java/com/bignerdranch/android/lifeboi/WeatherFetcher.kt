@@ -26,8 +26,8 @@ class WeatherFetcher {
     }
 
 
-    fun fetchWeather(): LiveData<WeatherItem> {
-        val responseLiveData: MutableLiveData<WeatherItem> = MutableLiveData()
+    fun fetchWeather(): LiveData<WeatherResponse> {
+        val responseLiveData: MutableLiveData<WeatherResponse> = MutableLiveData()
         val weatherResponse: Call<WeatherResponse> = openWeatherApi.fetchWeather()
 
 
@@ -40,9 +40,7 @@ class WeatherFetcher {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                 Log.d(TAG, "Response received" + response )
                 val weatherResponse: WeatherResponse? = response.body()
-                var weatherItems: WeatherItem = weatherResponse!!.weatherItems
-                Log.d( TAG, weatherItems.toString() )
-                responseLiveData.value = weatherItems
+                responseLiveData.value = ( weatherResponse )
             }
         })
         return responseLiveData
