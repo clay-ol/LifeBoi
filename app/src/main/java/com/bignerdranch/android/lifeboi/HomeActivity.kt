@@ -59,6 +59,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
     override  fun onResume() {
         super.onResume()
         running = true
+        Log.d( TAG,"on Resume, should be tracking now")
         var stepsSensor = sensorManager?.getDefaultSensor( Sensor.TYPE_STEP_COUNTER )
 
         if ( stepsSensor == null ){
@@ -72,6 +73,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
     override fun onPause() {
         super.onPause()
         running = false
+        Log.d( TAG, "Pausing...not tracking steps")
         sensorManager?.unregisterListener( this )
     }
 
