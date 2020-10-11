@@ -2,22 +2,37 @@ package com.bignerdranch.android.lifeboi
 
 import android.content.Context
 import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
+import kotlin.math.roundToInt
 
 const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
 private const val REQUEST_EVENT_SCREEN = 10
+private const val TAG = "HomeActivity"
 
-class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
+class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventListener {
     private var username = ""
+    private var running = false
+    private var steps = 0
+    private lateinit var locationManager: LocationManager
+    private var sensorManager: SensorManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         username = intent.getStringExtra(EXTRA_USER_FOUND).toString()
+
+        sensorManager = getSystemService( Context.SENSOR_SERVICE ) as SensorManager
+//        locationManager = getSystemService( Context.LOCATION_SERVICE ) as LocationManager
+//        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, minTime)
 
 
         val currentFragment =
@@ -34,6 +49,34 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
 
     }
 
+    override  fun onResume() {
+        super.onResume()
+        running = true
+        var stepsSensor = sensorManager?.getDefaultSensor( Sensor.TYPE_STEP_COUNTER )
+
+        if ( stepsSensor == null ){
+            Log.d( TAG, "No step sensor" )
+        }
+        else {
+            sensorManager?.registerListener( this, stepsSensor, SensorManager.SENSOR_DELAY_UI )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        running = false
+        sensorManager?.unregisterListener( this )
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    }
+
+    override fun onSensorChanged( event: SensorEvent ) {
+        if( running ) {
+            steps = event.values[0].roundToInt()
+        }
+    }
+
     override fun onWeatherSelected() {
         val fragment = WeatherFragment()
         supportFragmentManager
@@ -44,7 +87,10 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
     }
 
     override fun onStepsSelected() {
+//        var stepsBundle = Bundle()
+//        stepsBundle.putInt( "steps", steps )
         val fragment = StepsFragment()
+        fragment.arguments?.putInt("steps", steps )
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment )

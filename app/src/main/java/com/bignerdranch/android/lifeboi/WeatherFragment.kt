@@ -1,5 +1,8 @@
 package com.bignerdranch.android.lifeboi
 
+import android.content.Context
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
@@ -31,7 +34,7 @@ class WeatherFragment : Fragment() {
     private lateinit var dayWindText: TextView
     private lateinit var dayVisText: TextView
     private lateinit var dayCloudyText: TextView
-    private lateinit var locationManager: LocationManager
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,43 +60,6 @@ class WeatherFragment : Fragment() {
         latText = view.findViewById(R.id.lat) as TextView
         longText = view.findViewById(R.id.lon ) as TextView
 
-
-//        locationManager?.let{ this.locationManager =
-//            context?.getSystemService( Context.LOCATION_SERVICE ) as LocationManager
-//        }
-//        if (this.context?.let {
-//                ActivityCompat.checkSelfPermission(
-//                    it,
-//                    Manifest.permission.ACCESS_FINE_LOCATION
-//                )
-//            } != PackageManager.PERMISSION_GRANTED && this.context?.let {
-//                ActivityCompat.checkSelfPermission(
-//                    it,
-//                    Manifest.permission.ACCESS_COARSE_LOCATION
-//                )
-//            } != PackageManager.PERMISSION_GRANTED
-//        ) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return view
-//        }
-//        var locationListener = object : LocationListener{
-//            override fun onLocationChanged(p0: Location) {
-//                var latitude = p0!!.latitude
-//                var longitude = p0!!.longitude
-//
-//                latText.text = latitude.toString()
-//                longText.text = longitude.toString()
-//
-//            }
-//        }
-
-//        locationManager = getSystemService( Context.LOCATION_SERVICE )
         val currentCurrentWeatherData: LiveData<WeatherResponse> = WeatherFetcher().fetchWeather()
         currentCurrentWeatherData.observe(
             viewLifecycleOwner,
