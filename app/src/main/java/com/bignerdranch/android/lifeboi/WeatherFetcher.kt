@@ -5,7 +5,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.bignerdranch.android.lifeboi.weatherapi.OpenWeatherApi
+import com.bignerdranch.android.lifeboi.weatherapi.WeatherInterceptor
 import com.bignerdranch.android.lifeboi.weatherapi.WeatherResponse
+import okhttp3.OkHttpClient
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -13,14 +15,18 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 private const val TAG = "WeatherFetcher"
 
-class WeatherFetcher {
+class WeatherFetcher( latitude: String, longitude: String ) {
 
     private val openWeatherApi: OpenWeatherApi
 
     init {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(WeatherInterceptor( latitude, longitude ))
+            .build()
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl("https://api.openweathermap.org")
             .addConverterFactory(GsonConverterFactory.create())
+            .client( client )
             .build()
         openWeatherApi = retrofit.create(OpenWeatherApi::class.java)
     }

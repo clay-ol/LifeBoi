@@ -23,8 +23,8 @@ private const val WEATHER_ARG_USERNAME = "username"
 
 class WeatherFragment : Fragment() {
 
-    private var latitude: Double = 42.2626
-    private var longitude: Double = -71.8023
+//    private var latitude: Double = 42.2626
+//    private var longitude: Double = -71.8023
     private lateinit var locationText: TextView
     private lateinit var latText: TextView
     private lateinit var longText: TextView
@@ -56,6 +56,8 @@ class WeatherFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
+        var latitude = arguments?.getDouble("lat")
+        var longitude = arguments?.getDouble( "lon" )
         locationText = view.findViewById( R.id.location ) as TextView
         dayMinTempText = view.findViewById( R.id.dayLow ) as TextView
         dayMaxTempText = view.findViewById( R.id.dayHigh ) as TextView
@@ -70,7 +72,7 @@ class WeatherFragment : Fragment() {
         latText = view.findViewById(R.id.lat) as TextView
         longText = view.findViewById(R.id.lon ) as TextView
 
-        val currentCurrentWeatherData: LiveData<WeatherResponse> = WeatherFetcher().fetchWeather()
+        val currentCurrentWeatherData: LiveData<WeatherResponse> = WeatherFetcher( latitude.toString(), longitude.toString() ).fetchWeather()
         currentCurrentWeatherData.observe(
             viewLifecycleOwner,
             Observer { weatherItems ->
