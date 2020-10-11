@@ -48,6 +48,7 @@ class SplashFragment: Fragment() {
         loginButton = view.findViewById(R.id.login_button)
         signUpButton = view.findViewById(R.id.signUp_button)
         wwImageView = view.findViewById(R.id.ww_image)
+        
         return view
     }
 

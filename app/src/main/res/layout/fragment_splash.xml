@@ -8,10 +8,19 @@
     android:gravity="center"
     tools:context="com.bignerdranch.android.lifeboi.SplashFragment">
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/ww_image"
+        android:layout_marginTop="-100dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="120dp"
+        android:scaleType="fitCenter"/>
+
     <Button
         android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:text="@string/login_button"/>
 
     <Button
@@ -19,12 +28,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/signUp_button"/>
-
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/ww_image"
-        android:layout_marginTop="100dp"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:scaleType="fitCenter"/>
 
 </LinearLayout>
