@@ -38,7 +38,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
         Log.d("HomeActivity", "Got Username: ${username}")
 
         sensorManager = getSystemService( Context.SENSOR_SERVICE ) as SensorManager
-//        locationManager = getSystemService( Context.LOCATION_SERVICE ) as LocationManager
+        locationManager = getSystemService( Context.LOCATION_SERVICE ) as LocationManager
 //        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, minTime)
 
 

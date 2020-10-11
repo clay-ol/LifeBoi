@@ -44,9 +44,9 @@ class WeatherFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        username = arguments?.getSerializable(WEATHER_ARG_USERNAME) as String
+//        username = arguments?.getSerializable(WEATHER_ARG_USERNAME) as String
 
-        Log.d(TAG, "Got username: $username")
+//        Log.d(TAG, "Got username: $username")
     }
 
     override fun onCreateView(

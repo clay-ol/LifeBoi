@@ -35,9 +35,9 @@ class StepsFragment : Fragment() {
             steps = arguments!!.getInt("steps" )
         }
 
-        username = arguments?.getSerializable(STEPS_ARG_USERNAME) as String
+//        username = arguments?.getSerializable(STEPS_ARG_USERNAME) as String
 
-        Log.d(TAG, "Got username: $username")
+//        Log.d(TAG, "Got username: $username")
     }
 
     override fun onCreateView(
