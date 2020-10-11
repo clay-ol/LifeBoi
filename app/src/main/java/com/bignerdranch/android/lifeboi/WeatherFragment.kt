@@ -22,6 +22,8 @@ private const val TAG = "WeatherFragment"
 
 class WeatherFragment : Fragment() {
 
+    private var latitude: Double = 42.2626
+    private var longitude: Double = -71.8023
     private lateinit var locationText: TextView
     private lateinit var latText: TextView
     private lateinit var longText: TextView
@@ -64,11 +66,14 @@ class WeatherFragment : Fragment() {
         currentCurrentWeatherData.observe(
             viewLifecycleOwner,
             Observer { weatherItems ->
+
+                latitude = weatherItems.lat.toDouble()
+                longitude = weatherItems.lon.toDouble()
                 Log.d(TAG, "Response received: $weatherItems")
 
                 locationText.text = "Worcester"
-                latText.text = "Latitude: ${weatherItems.lat}"
-                longText.text = "Longitude: ${weatherItems.lon}"
+                latText.text = "Latitude: ${latitude}"
+                longText.text = "Longitude: ${longitude}"
 
                 currentTempText.text =
                     "Current Temp (C): ${(weatherItems.current.temp).toDouble() - 273.15}"

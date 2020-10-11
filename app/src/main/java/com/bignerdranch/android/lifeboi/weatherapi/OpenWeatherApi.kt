@@ -5,7 +5,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 
-interface OpenWeatherApi {
+interface OpenWeatherApi{
 
     @GET( "https://api.openweathermap.org/data/2.5/onecall?"
             + "lat=" + "42.2626"

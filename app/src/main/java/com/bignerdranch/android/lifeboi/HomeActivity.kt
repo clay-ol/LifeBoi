@@ -1,7 +1,9 @@
 package com.bignerdranch.android.lifeboi
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -10,6 +12,7 @@ import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import kotlin.math.roundToInt
 
@@ -19,6 +22,9 @@ private const val TAG = "HomeActivity"
 
 class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventListener {
     private var username = ""
+
+    private var latitude = 42.2626
+    private var longitude = -71.8023
     private var running = false
     private var steps = 0
     private lateinit var locationManager: LocationManager
@@ -78,7 +84,10 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
     }
 
     override fun onWeatherSelected() {
+        getLocation()
         val fragment = WeatherFragment()
+        fragment?.arguments?.putDouble("lat", latitude )
+        fragment?.arguments?.putDouble("lon", longitude )
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment )
@@ -101,6 +110,30 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
     override fun onEventSelected() {
         val intent = AppointmentActivity.newIntent(this@HomeActivity)
         startActivityForResult(intent, REQUEST_EVENT_SCREEN)
+    }
+
+    fun getLocation() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.d( TAG, "No permissions :(")
+            return
+        }else {
+
+            var locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+            if (locationGPS != null) {
+                latitude = locationGPS.latitude
+                longitude = locationGPS.longitude
+            } else {
+                latitude = 42.2626
+                longitude = -71.8023
+            }
+        }
     }
 
     companion object{
