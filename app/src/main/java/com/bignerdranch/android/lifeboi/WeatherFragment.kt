@@ -19,6 +19,7 @@ import org.w3c.dom.Text
 
 
 private const val TAG = "WeatherFragment"
+private const val WEATHER_ARG_USERNAME = "username"
 
 class WeatherFragment : Fragment() {
 
@@ -38,9 +39,16 @@ class WeatherFragment : Fragment() {
     private lateinit var dayCloudyText: TextView
 
 
+    private var username = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        username = arguments?.getSerializable(WEATHER_ARG_USERNAME) as String
+
+        Log.d(TAG, "Got username: $username")
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -92,5 +100,17 @@ class WeatherFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+    }
+
+    companion object {
+        fun newInstance(username: String): WeatherFragment {
+            val args = Bundle().apply {
+                putSerializable(WEATHER_ARG_USERNAME, username)
+            }
+
+            return WeatherFragment().apply{
+                arguments = args
+            }
+        }
     }
 }

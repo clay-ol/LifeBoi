@@ -9,19 +9,24 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import java.time.LocalDate
 
+private const val APPOINTMENT_USER = "com.bignerdranch.android.lifeboi.appointment_user_found"
 private const val APPOINTMENT_DATE = "com.bignerdranch.android.lifeboi.appointment_date"
 
 class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, AppointmentListFragment.Callbacks, ConfigureAppointmentsFragment.Callbacks {
 
     private var dateType: Int = 3
+    private var username = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_appointment)
+        username = intent.getStringExtra(APPOINTMENT_USER).toString()
+
+        Log.d("AppointmentActivity", "Got Username: $username")
 
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_appointment_container)
         if (currentFragment == null) {
-            val fragment = AppointmentListFragment.newInstance()
+            val fragment = AppointmentListFragment.newInstance(username)
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_appointment_container, fragment)
@@ -73,9 +78,9 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
     }
 
     companion object{
-        fun newIntent(packageContext: Context) : Intent {
+        fun newIntent(packageContext: Context, username: String) : Intent {
             return Intent(packageContext, AppointmentActivity::class.java).apply {
-                putExtra(APPOINTMENT_DATE, true)
+                putExtra(APPOINTMENT_USER, username)
             }
         }
     }

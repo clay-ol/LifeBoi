@@ -35,6 +35,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
         setContentView(R.layout.activity_home)
 
         username = intent.getStringExtra(EXTRA_USER_FOUND).toString()
+        Log.d("HomeActivity", "Got Username: ${username}")
 
         sensorManager = getSystemService( Context.SENSOR_SERVICE ) as SensorManager
 //        locationManager = getSystemService( Context.LOCATION_SERVICE ) as LocationManager
@@ -108,7 +109,8 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
     }
 
     override fun onEventSelected() {
-        val intent = AppointmentActivity.newIntent(this@HomeActivity)
+        Log.d("HomeActivity", "Passing Username: $username to AppointmentActivity")
+        val intent = AppointmentActivity.newIntent(this@HomeActivity, username)
         startActivityForResult(intent, REQUEST_EVENT_SCREEN)
     }
 

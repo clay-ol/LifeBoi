@@ -17,6 +17,7 @@ import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import java.util.*
 
 private const val REQUEST_HOME_SCREEN = 0
+private const val TAG = "LoginInfo"
 
 class LoginFragment: Fragment() {
 
@@ -85,7 +86,6 @@ class LoginFragment: Fragment() {
                 count: Int
             ) {
                 username = sequence.toString()
-                //crime.title = sequence.toString()
             }
 
             override fun afterTextChanged(sequence: Editable?) {
@@ -123,23 +123,12 @@ class LoginFragment: Fragment() {
 
         loginButton.setOnClickListener {
 
-            /*
-            val appointment = Appointment(
-                UUID.randomUUID().toString(),
-                "Boston",
-                username,
-                "Party",
-                listOf("user0", "user1", "user2")
-            )
-
-            firebaseClient.addAppointment(appointment)
-            */
             if (!username.equals("") && !password.equals("")) {
-                Log.d("SplashActivity", username)
-                Log.d("SplashActivity", password)
+                Log.d(TAG, username)
+                Log.d(TAG, password)
 
                 firebaseClient.checkLoginPassword(username, password) {result ->
-                    Log.d("SplashActivity", "Result: ${result}")
+                    Log.d(TAG, "Result: ${result}")
 
                     if (result) {
                         val intent = HomeActivity.newIntent((context), username)

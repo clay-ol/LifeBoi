@@ -18,7 +18,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 private const val REQUEST_HOME_SCREEN = 0
-
+private const val TAG = "LoginInfo"
 class SignUpFragment: Fragment() {
 
     private var username = ""
@@ -247,20 +247,20 @@ class SignUpFragment: Fragment() {
                 "password" to password
             )
 
-            if (!foundEmpty(userAccount)) {
-                firebaseClient.checkForExistingUser(username) {result ->
+            if (!foundEmpty(userAccount) && checkPhoneNumber(phoneNumber)) {
+                firebaseClient.checkForExistingUser(username, phoneNumber) {result ->
                     if (result) {
                         firebaseClient.signUp(userAccount, username)
                         val intent = HomeActivity.newIntent((context), username)
                         startActivityForResult(intent, REQUEST_HOME_SCREEN)
 
                     } else {
-                        Toast.makeText(activity, "Username Taken!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "Username or Phone Number Taken!", Toast.LENGTH_LONG).show()
                     }
                 }
 
             } else {
-                Toast.makeText(activity, "Missing Input Found!", Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Missing Input Found or Incorrect Phone Number Length!", Toast.LENGTH_LONG).show()
             }
 
 
@@ -272,13 +272,21 @@ class SignUpFragment: Fragment() {
     }
 
     private fun foundEmpty(dataMap: HashMap<String, String>): Boolean {
-        for ((key, value) in dataMap) {
+        for ((value) in dataMap) {
             if (value.equals("")) {
                 return true
             }
         }
 
         return false
+    }
+
+    private fun checkPhoneNumber(number: String): Boolean {
+        if (number.length != 10) {
+            return false
+        }
+
+        return true
     }
 
     companion object {

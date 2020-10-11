@@ -20,10 +20,6 @@ class FirebaseClient private constructor(context: Context) {
     private val TAG = "FirebaseClient"
     private val database = Firebase.firestore
 
-    var users: MutableLiveData<UserAccount> = MutableLiveData()
-
-    private val executor = Executors.newSingleThreadExecutor()
-
     fun getDatabase() : FirebaseFirestore {
         return database
     }
@@ -39,13 +35,19 @@ class FirebaseClient private constructor(context: Context) {
             }
     }
 
-    fun checkForExistingUser(username: String, callback: (Boolean) -> Unit) {
+    fun checkForExistingUser(username: String, phonenumber: String, callback: (Boolean) -> Unit) {
         database.collection("users").document(username)
             .get()
             .addOnSuccessListener { document ->
                 if (!document.exists()) {
-                    callback.invoke(true)
-                    Log.d(TAG, "No Existing Username: ${username} Found")
+                    if (document.getString("phone_number").equals(phonenumber)) {
+                        Log.d(TAG, "No Existing Username: ${username} and Phone Number: ${phonenumber} Found")
+                        callback.invoke(true)
+
+                    } else {
+                        Log.d(TAG, "Unique Username: ${username}, but Existing Phone Number: ${phonenumber} Found")
+                        callback.invoke(false)
+                    }
                 } else {
                     Log.d(TAG, "Found Existing Username: ${username}")
                     callback.invoke(false)
@@ -58,8 +60,7 @@ class FirebaseClient private constructor(context: Context) {
     }
 
 
-    fun checkLoginPassword(username: String, password: String, callback:(Boolean) -> Unit
-    ) {
+    fun checkLoginPassword(username: String, password: String, callback:(Boolean) -> Unit) {
         database.collection("users").document(username)
             .get()
             .addOnSuccessListener { document ->
@@ -82,52 +83,68 @@ class FirebaseClient private constructor(context: Context) {
             .addOnFailureListener{ exception ->
                 Log.d(TAG, "got failed with ", exception)
             }
+    }
 
+    fun getPhoneNumber(username: String, callback:(String) -> Unit) {
+        database.collection("users").document(username)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    callback.invoke(document.get("phone_number").toString())
+
+                } else {
+                    Log.d(TAG, "Username: $username Does Not Exist in Database")
+                    callback.invoke("")
+                }
+            }
+            .addOnFailureListener { e ->
+                callback.invoke("")
+                Log.d(TAG, "Failed to get Phone Number with Username: $username", e)
+            }
     }
 
     fun addAppointment(data: Appointment) {
         database.collection("appointments")
             .add(data)
             .addOnSuccessListener {
-                Log.d(TAG, "added appointment to database!")
+                Log.d(TAG, "added appointment to database successfully!")
             }
             .addOnFailureListener { e ->
                 Log.e(TAG, "failed to add appointment to database", e)
             }
     }
 
-    /* TODO - figure out a way to make this work with Ted and also handle the Date issue
-    fun getUserAppointments(username: String, callback: (List<Appointment>) -> Unit) {
-        database.collection("appointments")
+
+    fun deleteAppointment(id: String, username: String) {
+        val myRef = database.collection("appointments")
+            .whereEqualTo("id", id)
             .whereEqualTo("host", username)
-            //.whereArrayContains("invitation", username)
-            .get()
-            .addOnSuccessListener { documents ->
-                val listOfDocuments: MutableList<Appointment> = mutableListOf()
-                for (document in documents) {
 
-                    val appointment = Appointment(
-                        UUID.randomUUID().toString(),
-                        document.data["location"].toString(),
-                        username,
-                        document.data["name"].toString(),
-                        document.data["invitations"] as List<String>,
-                        document.data["startDate"].toString(),
-                        document.data["endDate"].toString()
-                    )
+        myRef.get()
+            .addOnSuccessListener {document ->
+                if (document.documents.size != 0) {
+                    val targetedDocument = document.documents[0].id
+                    Log.d(TAG, "Obtained the Targeted Document: $targetedDocument")
 
+                    database.collection("appointments").document(targetedDocument)
+                        .delete()
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Deleted Document Successfully!")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d(TAG, "Deletion Operation Failed", e)
+                        }
 
-                    listOfDocuments.add(appointment)
+                } else {
+                    Log.d(TAG, "Unable to Find Document With ID=${id}")
                 }
-                Log.d(TAG, "Found Appointments!")
-                callback.invoke(listOfDocuments)
             }
 
             .addOnFailureListener { e ->
-                Log.e(TAG, "failed to get appointments", e)
+                Log.d(TAG, "Getting Appointment Failed!", e)
             }
     }
-     */
+
     companion object {
         private var INSTANCE: FirebaseClient? = null
 
