@@ -8,8 +8,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 
-private val ACCOUNT_SID = ""
-private val AUTH_TOKEN = ""
+private val ACCOUNT_SID = "AC6ca7d0c7bce631c61f076828d87819cc"
+private val AUTH_TOKEN = "4c3eafeee2bd390eeaa8b1f89b272f2e"
 
 class TextMessenger {
 
