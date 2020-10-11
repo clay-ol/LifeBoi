@@ -23,8 +23,8 @@ private const val WEATHER_ARG_USERNAME = "username"
 
 class WeatherFragment : Fragment() {
 
-//    private var latitude: Double = 42.2626
-//    private var longitude: Double = -71.8023
+    private var latitude: Double = 42.2626
+    private var longitude: Double = -71.8023
     private lateinit var locationText: TextView
     private lateinit var latText: TextView
     private lateinit var longText: TextView
@@ -43,6 +43,8 @@ class WeatherFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        latitude = arguments?.getSerializable("lat") as Double
+        longitude = arguments?.getSerializable( "lon" ) as Double
 
 //        username = arguments?.getSerializable(WEATHER_ARG_USERNAME) as String
 
@@ -56,8 +58,7 @@ class WeatherFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
-        var latitude = arguments?.getDouble("lat")
-        var longitude = arguments?.getDouble( "lon" )
+
         locationText = view.findViewById( R.id.location ) as TextView
         dayMinTempText = view.findViewById( R.id.dayLow ) as TextView
         dayMaxTempText = view.findViewById( R.id.dayHigh ) as TextView
@@ -77,8 +78,8 @@ class WeatherFragment : Fragment() {
             viewLifecycleOwner,
             Observer { weatherItems ->
 
-                latitude = weatherItems.lat.toDouble()
-                longitude = weatherItems.lon.toDouble()
+//                latitude = weatherItems.lat.toDouble()
+//                longitude = weatherItems.lon.toDouble()
                 Log.d(TAG, "Response received: $weatherItems")
 
                 locationText.text = "Worcester"
@@ -105,9 +106,10 @@ class WeatherFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(username: String): WeatherFragment {
+        fun newInstance(lat: Double, lon: Double): WeatherFragment {
             val args = Bundle().apply {
-                putSerializable(WEATHER_ARG_USERNAME, username)
+                putSerializable("lat", lat)
+                putSerializable("lon", lon)
             }
 
             return WeatherFragment().apply{

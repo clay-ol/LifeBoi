@@ -89,9 +89,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
 
     override fun onWeatherSelected() {
         getLocation()
-        val fragment = WeatherFragment()
-        fragment?.arguments?.putDouble("lat", latitude )
-        fragment?.arguments?.putDouble("lon", longitude )
+        val fragment = WeatherFragment.newInstance( latitude, longitude )
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment )
