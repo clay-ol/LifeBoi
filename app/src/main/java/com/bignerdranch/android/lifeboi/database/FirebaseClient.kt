@@ -103,7 +103,7 @@ class FirebaseClient private constructor(context: Context) {
             }
     }
 
-    fun getAppoitnment(username: String, callback:(Appointment) -> Unit) {
+    fun getAppointment(username: String, callback:(Appointment) -> Unit) {
         val query = database.collection("appointments")
             .whereEqualTo("host", username)
 
@@ -113,12 +113,14 @@ class FirebaseClient private constructor(context: Context) {
                     val firstDocument = document.documents[0]
                     val appointment = Appointment(
                         id = firstDocument.get("id").toString(),
+                        location = firstDocument.get("location").toString(),
                         host = firstDocument.get("host").toString(),
                         name = firstDocument.get("name").toString(),
                         phoneNumber = firstDocument.get("phone_number").toString(),
                         startDate = firstDocument.get("startDate").toString(),
                         endDate = firstDocument.get("endDate").toString(),
-                        invitations = firstDocument.get("invitations") as List<String>
+                        invitations = firstDocument.get("invitations") as List<String>,
+                        isInvitee = firstDocument.get("isInvitee") as Boolean
                     )
 
                     Log.d(TAG, "Got Appointment (Name: ${appointment.name})")

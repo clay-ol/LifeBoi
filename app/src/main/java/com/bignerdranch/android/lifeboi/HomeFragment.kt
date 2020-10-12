@@ -69,7 +69,7 @@ class HomeFragment : Fragment() {
         eventButton = view.findViewById(R.id.event_button) as Button
         stepsButton = view.findViewById(R.id.steps_button) as Button
 
-        firebaseClient.getAppoitnment(username) {result ->
+        firebaseClient.getAppointment(username) {result ->
             val appointmentName = "Appointment: ${result.name}"
             val appointmentDate = "Starts on ${result.startDate} and Ends on ${result.endDate}"
 
