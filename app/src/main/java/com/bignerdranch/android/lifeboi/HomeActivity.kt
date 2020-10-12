@@ -4,33 +4,29 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.bignerdranch.android.lifeboi.database.FirebaseClient
-import com.bignerdranch.android.lifeboi.datamodel.Appointment
-import kotlin.math.roundToInt
+import androidx.lifecycle.ViewModelProviders
+import com.bignerdranch.android.lifeboi.viewModels.FitnessViewModel
 
 const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
 private const val REQUEST_EVENT_SCREEN = 10
 private const val TAG = "HomeActivity"
 
-class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventListener {
+class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks{
     private var username = ""
 
     private var latitude = 42.2626
     private var longitude = -71.8023
-    private var running = false
-    private var steps = 0
+
+    val fitnessViewModel: FitnessViewModel by lazy {
+        ViewModelProviders.of(this).get(FitnessViewModel::class.java)
+    }
+
     private lateinit var locationManager: LocationManager
-    private var sensorManager: SensorManager? = null
 
     //private lateinit var appointment: Appointment
 
@@ -41,10 +37,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
         username = intent.getStringExtra(EXTRA_USER_FOUND).toString()
         Log.d("HomeActivity", "Got Username: ${username}")
 
-
-        sensorManager = getSystemService( Context.SENSOR_SERVICE ) as SensorManager
         locationManager = getSystemService( Context.LOCATION_SERVICE ) as LocationManager
-//        locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, minTime)
         getLocation()
 
         val currentFragment =
@@ -63,34 +56,12 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
 
     override  fun onResume() {
         super.onResume()
-        running = true
-        Log.d( TAG,"on Resume, should be tracking now")
-        var stepsSensor = sensorManager?.getDefaultSensor( Sensor.TYPE_STEP_COUNTER )
-
-        if ( stepsSensor == null ){
-            Log.d( TAG, "No step sensor" )
-        }
-        else {
-            sensorManager?.registerListener( this, stepsSensor, SensorManager.SENSOR_DELAY_UI )
-        }
     }
 
     override fun onPause() {
         super.onPause()
-        running = false
-        Log.d( TAG, "Pausing...not tracking steps")
-        sensorManager?.unregisterListener( this )
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-    }
-
-    override fun onSensorChanged( event: SensorEvent ) {
-        if( running ) {
-            steps = event.values[0].roundToInt()
-            Log.d( TAG, "steps: ${steps}" )
-        }
-    }
 
     override fun onWeatherSelected() {
         getLocation()
@@ -102,11 +73,11 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
             .commit()
     }
 
-    override fun onStepsSelected() {
+    override fun onFitnessSelected() {
 //        var stepsBundle = Bundle()
 //        stepsBundle.putInt( "steps", steps )
-        val fragment = StepsFragment()
-        fragment.arguments?.putInt("steps", steps )
+        val fragment = FitnessFragment()
+//        fragment.arguments?.putInt("steps", steps )
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, fragment )
@@ -120,7 +91,7 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
         startActivityForResult(intent, REQUEST_EVENT_SCREEN)
     }
 
-    fun getLocation() {
+    private fun getLocation() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION

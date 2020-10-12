@@ -19,7 +19,6 @@ import org.w3c.dom.Text
 
 
 private const val TAG = "WeatherFragment"
-private const val WEATHER_ARG_USERNAME = "username"
 
 class WeatherFragment : Fragment() {
 
@@ -37,18 +36,12 @@ class WeatherFragment : Fragment() {
     private lateinit var dayWindText: TextView
     private lateinit var dayVisText: TextView
     private lateinit var dayCloudyText: TextView
-
-
-    private var username = ""
+    
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         latitude = arguments?.getSerializable("lat") as Double
         longitude = arguments?.getSerializable( "lon" ) as Double
-
-//        username = arguments?.getSerializable(WEATHER_ARG_USERNAME) as String
-
-//        Log.d(TAG, "Got username: $username")
     }
 
     override fun onCreateView(
@@ -77,9 +70,6 @@ class WeatherFragment : Fragment() {
         currentCurrentWeatherData.observe(
             viewLifecycleOwner,
             Observer { weatherItems ->
-
-//                latitude = weatherItems.lat.toDouble()
-//                longitude = weatherItems.lon.toDouble()
                 Log.d(TAG, "Response received: $weatherItems")
 
                 locationText.text = "Worcester"

@@ -34,10 +34,10 @@
         android:layout_margin="20dp">
 
         <Button
-            android:id="@+id/steps_button"
+            android:id="@+id/fitness_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/steps_button"/>
+            android:text="@string/fitness_button"/>
 
         <Button
             android:id="@+id/event_button"

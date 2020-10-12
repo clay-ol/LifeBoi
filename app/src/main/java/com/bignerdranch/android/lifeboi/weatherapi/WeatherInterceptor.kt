@@ -12,10 +12,6 @@ class WeatherInterceptor(latitude: String, longitude: String ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest: Request = chain.request()
 
-//        + "lat=" + "42.2626"
-//        + "&lon=" + "-71.8023"
-//        + "&exclude=" + "minutely"
-//        + "&appid=" + "" )
         val newUrl: HttpUrl = originalRequest.url().newBuilder()
             .addQueryParameter("lat", latitude )
             .addQueryParameter("lon", longitude)

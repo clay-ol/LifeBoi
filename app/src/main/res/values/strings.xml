@@ -3,9 +3,15 @@
     <string name="login_button">Login</string>
     <string name="signUp_button">Sign Up</string>
     <string name="back_button">Back</string>
-    <string name="steps_button">Steps</string>
+    <string name="fitness_button">Fitness</string>
     <string name="event_button">Events</string>
     <string name="weather_button">Weather</string>
+    <string name="fitness_name">Fitness!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pushups">2 Sets of 50 Pushups</string>
+    <string name="pullups">4 Sets of 25 Pullups</string>
+    <string name="leglifts">2 Sets of 50 Leg Lifts</string>
+    <string name="squats">4 Sets of 50 Squats</string>
+    <string name="fitnessToast">You are Fitness!</string>
 </resources>

@@ -9,8 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.bignerdranch.android.lifeboi.database.FirebaseClient
-import org.w3c.dom.Text
+import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
+import com.bignerdranch.android.lifeboi.viewModels.FitnessViewModel
 
 
 private const val TAG = "HomeFragment"
@@ -20,7 +23,7 @@ class HomeFragment : Fragment() {
 
     interface Callbacks {
         fun onWeatherSelected()
-        fun onStepsSelected()
+        fun onFitnessSelected()
         fun onEventSelected()
     }
 
@@ -30,7 +33,7 @@ class HomeFragment : Fragment() {
     private lateinit var appointmentDateTextView: TextView
     private lateinit var weatherButton: Button
     private lateinit var eventButton: Button
-    private lateinit var stepsButton: Button
+    private lateinit var fitnessButton: Button
 
     private var username = ""
     private lateinit var firebaseClient: FirebaseClient
@@ -52,6 +55,7 @@ class HomeFragment : Fragment() {
         firebaseClient = FirebaseClient.get()
 
         Log.d(TAG, "Got username: $username")
+
     }
 
     override fun onCreateView(
@@ -67,7 +71,7 @@ class HomeFragment : Fragment() {
         appointmentDateTextView = view.findViewById(R.id.home_appointment_date) as TextView
         weatherButton = view.findViewById(R.id.weather_button) as Button
         eventButton = view.findViewById(R.id.event_button) as Button
-        stepsButton = view.findViewById(R.id.steps_button) as Button
+        fitnessButton = view.findViewById(R.id.fitness_button) as Button
 
         firebaseClient.getAppointment(username) {result ->
             val appointmentName = "Appointment: ${result.name}"
@@ -86,8 +90,8 @@ class HomeFragment : Fragment() {
             callbacks?.onEventSelected()
         }
 
-        stepsButton.setOnClickListener {
-            callbacks?.onStepsSelected()
+        fitnessButton.setOnClickListener {
+            callbacks?.onFitnessSelected()
 
         }
         return view
