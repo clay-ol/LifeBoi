@@ -8,6 +8,7 @@ import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.datamodel.UserAccount
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
@@ -113,7 +114,7 @@ class FirebaseClient private constructor(context: Context) {
                     val firstDocument = document.documents[0]
                     val appointment = Appointment(
                         id = firstDocument.get("id").toString(),
-                        location = firstDocument.get("location").toString(),
+                        location = firstDocument.get("location") as GeoPoint,
                         host = firstDocument.get("host").toString(),
                         name = firstDocument.get("name").toString(),
                         phoneNumber = firstDocument.get("phone_number").toString(),
