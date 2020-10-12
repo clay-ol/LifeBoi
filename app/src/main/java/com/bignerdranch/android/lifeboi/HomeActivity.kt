@@ -14,6 +14,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bignerdranch.android.lifeboi.database.FirebaseClient
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import kotlin.math.roundToInt
 
 const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
@@ -30,12 +32,15 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks, SensorEventLis
     private lateinit var locationManager: LocationManager
     private var sensorManager: SensorManager? = null
 
+    //private lateinit var appointment: Appointment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         username = intent.getStringExtra(EXTRA_USER_FOUND).toString()
         Log.d("HomeActivity", "Got Username: ${username}")
+
 
         sensorManager = getSystemService( Context.SENSOR_SERVICE ) as SensorManager
         locationManager = getSystemService( Context.LOCATION_SERVICE ) as LocationManager

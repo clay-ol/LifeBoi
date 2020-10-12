@@ -103,6 +103,36 @@ class FirebaseClient private constructor(context: Context) {
             }
     }
 
+    fun getAppoitnment(username: String, callback:(Appointment) -> Unit) {
+        val query = database.collection("appointments")
+            .whereEqualTo("host", username)
+
+        query.get()
+            .addOnSuccessListener { document ->
+                if (document.documents.size != 0) {
+                    val firstDocument = document.documents[0]
+                    val appointment = Appointment(
+                        id = firstDocument.get("id").toString(),
+                        host = firstDocument.get("host").toString(),
+                        name = firstDocument.get("name").toString(),
+                        phoneNumber = firstDocument.get("phone_number").toString(),
+                        startDate = firstDocument.get("startDate").toString(),
+                        endDate = firstDocument.get("endDate").toString(),
+                        invitations = firstDocument.get("invitations") as List<String>
+                    )
+
+                    Log.d(TAG, "Got Appointment (Name: ${appointment.name})")
+                    callback.invoke(appointment)
+
+                } else {
+                    Log.d(TAG, "No Appointments Found for User: $username")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "Error Getting Appointment!", e)
+            }
+    }
+
     fun addAppointment(data: Appointment) {
         database.collection("appointments")
             .add(data)
