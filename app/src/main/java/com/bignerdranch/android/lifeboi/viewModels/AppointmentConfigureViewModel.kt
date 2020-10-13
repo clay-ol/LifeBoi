@@ -11,11 +11,11 @@ class AppointmentConfigureViewModel : ViewModel() {
     var location: String = ""
     var invitationList = hashMapOf<String, String>()
 
-    override fun onCleared() {
-        super.onCleared()
-    }
-
-    fun resetAppointment() : AppointmentConfigureViewModel {
-        return AppointmentConfigureViewModel()
+    fun resetAppointment() {
+        startDate = LocalDate.now().toString()
+        endDate = LocalDate.now().toString()
+        nameOfEvent = ""
+        location = ""
+        invitationList.clear()
     }
 }

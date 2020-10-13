@@ -144,13 +144,13 @@ class ConfigureAppointmentsFragment : Fragment() {
             if(nameEditText.text.isEmpty()) {
                 Toast.makeText(context, "Please name the event", Toast.LENGTH_SHORT).show()
             } else {
-//                val appointment = Appointment()
-//                appointment.startDate = startDateEditText.text.toString()
-//                appointment.endDate = endDateEditText.text.toString()
-//                appointment.name = nameEditText.text.toString()
-//                appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
-//                appointment.isInvitee = true
-//                FirebaseClient.get().addAppointment(appointment)
+                val appointment = Appointment()
+                appointment.startDate = startDateEditText.text.toString()
+                appointment.endDate = endDateEditText.text.toString()
+                appointment.name = nameEditText.text.toString()
+                appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
+                appointment.isInvitee = true
+                FirebaseClient.get().addAppointment(appointment)
 
                 clearAppointment()
                 callbacks?.onSubmitSelected()
@@ -271,6 +271,7 @@ class ConfigureAppointmentsFragment : Fragment() {
         nameEditText.setText("")
         locationEditText.setText("")
         inviteeChipGroup.removeAllViews()
+        Log.d(DEBUG, "${appointmentConfigureViewModel.invitationList.size}")
     }
 
     private fun addInvitation(invitee: String, number: String) {
@@ -280,7 +281,7 @@ class ConfigureAppointmentsFragment : Fragment() {
             val chipName : Chip = inviteeChipGroup.getChildAt(i) as Chip
             if(chipName.text == invitee) {
                 doesExist = true
-                break;
+                break
             }
         }
 
