@@ -138,13 +138,14 @@ class FirebaseClient private constructor(context: Context) {
                         startDate = firstDocument.get("startDate").toString(),
                         endDate = firstDocument.get("endDate").toString(),
                         invitations = firstDocument.get("invitations") as List<String>,
-                        isInvitee = firstDocument.get("isInvitee") as Boolean
+                        invitee = firstDocument.get("invitee") as Boolean
                     )
 
                     Log.d(TAG, "Got Appointment (Name: ${appointment.name})")
                     callback.invoke(appointment)
 
                 } else {
+                    callback.invoke(Appointment(id = "empty"))
                     Log.d(TAG, "No Appointments Found for User: $username")
                 }
             }
@@ -185,16 +186,16 @@ class FirebaseClient private constructor(context: Context) {
                     database.collection("appointments").document(targetedDocument)
                         .delete()
                         .addOnSuccessListener {
-                            Log.d(TAG, "Deleted Document Successfully!")
+                            Log.d(TAG, "Deleted Appointment Document Successfully!")
                         }
                         .addOnFailureListener { e ->
-                            Log.d(TAG, "Deletion Operation Failed", e)
+                            Log.d(TAG, "Deletion Appointment Operation Failed", e)
                         }
                 }
             }
 
             .addOnFailureListener { e ->
-                Log.d(TAG, "Getting Appointment Failed!", e)
+                Log.d(TAG, "Getting Appointment Deletion Failed!", e)
             }
     }
 

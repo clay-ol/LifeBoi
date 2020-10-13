@@ -316,14 +316,14 @@ class ConfigureAppointmentsFragment : Fragment() {
         appointment.host = username
 
         if(isHost) {
-            appointment.isInvitee = false
+            appointment.invitee = false
             appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
-            sendTexts(appointmentConfigureViewModel.invitationList, appointment.name, appointment.location.toString(), appointment.startDate, appointment.endDate)
+            sendTexts(appointmentConfigureViewModel.invitationList, appointment.name, appointment.location, appointment.startDate, appointment.endDate)
 
             FirebaseClient.get().addAppointment(appointment)
 
         } else {
-            appointment.isInvitee = true
+            appointment.invitee = true
 
             val listOfInvitees = appointmentConfigureViewModel.invitationList.keys
 
