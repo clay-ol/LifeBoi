@@ -138,7 +138,7 @@ class FirebaseClient private constructor(context: Context) {
                         startDate = firstDocument.get("startDate").toString(),
                         endDate = firstDocument.get("endDate").toString(),
                         invitations = firstDocument.get("invitations") as List<String>,
-                        isInvitee = firstDocument.get("isInvitee") as Boolean
+                        invitee = firstDocument.get("isInvitee") as Boolean
                     )
 
                     Log.d(TAG, "Got Appointment (Name: ${appointment.name})")

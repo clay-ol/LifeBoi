@@ -135,8 +135,7 @@ class ConfigureAppointmentsFragment : Fragment() {
 
             addTextChangedListener(textWatcher)
             setOnClickListener {
-//                val msg = TextMessenger.newInstance()
-//                msg.send("7603358848", "HI TED")
+
             }
 
 
@@ -222,8 +221,8 @@ class ConfigureAppointmentsFragment : Fragment() {
                             }
                         }
                         c?.close()
-                        if (number == "") number = "This contact is not saved into your device"
-                        else {
+
+                        if(number != "") {
                             addInvitation(invitee, number)
                         }
                         Log.d(DEBUG, "$invitee, $number")
@@ -316,7 +315,7 @@ class ConfigureAppointmentsFragment : Fragment() {
 
         // create appointment for host
         appointment.host = username
-        appointment.isInvitee = false
+        appointment.invitee = false
         appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
         appointment.invitations += listOf(username)
         sendTexts(
@@ -329,10 +328,10 @@ class ConfigureAppointmentsFragment : Fragment() {
 
         Log.d(DEBUG, "HOST IS: ${appointment.host}")
 
-        FirebaseClient.get().addAppointment(appointment)
+//        FirebaseClient.get().addAppointment(appointment)
 
         // create appointment for invitees
-        appointment.isInvitee = true
+        appointment.invitee = true
 
         for ((key, value) in appointmentConfigureViewModel.invitationList) {
             appointment.phoneNumber = key
