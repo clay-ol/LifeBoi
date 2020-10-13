@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -122,6 +123,7 @@ class AppointmentListFragment : Fragment() {
         private lateinit var appointment: Appointment
 
         private val appointmentTextView: TextView = itemView.findViewById(R.id.appointment_text)
+        private val appointmentLinearLayout: LinearLayout = itemView.findViewById(R.id.item_list_appointment)
 
         init {
             itemView.setOnClickListener(this)
@@ -134,6 +136,11 @@ class AppointmentListFragment : Fragment() {
         fun bind(appointment: Appointment) {
             this.appointment = appointment
             appointmentTextView.text = this.appointment.name
+            if(this.appointment.isInvitee) {
+                appointmentLinearLayout.setBackgroundResource(R.drawable.border)
+            } else {
+                appointmentLinearLayout.setBackgroundResource(R.drawable.border_host)
+            }
         }
     }
 

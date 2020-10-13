@@ -308,29 +308,45 @@ class ConfigureAppointmentsFragment : Fragment() {
 
     }
 
-    private fun commitAppointment(isHost: Boolean) {
+    private fun commitAppointment() {
         val appointment = Appointment()
         appointment.startDate = startDateEditText.text.toString()
         appointment.endDate = endDateEditText.text.toString()
         appointment.name = nameEditText.text.toString()
+
+        // create appointment for host
         appointment.host = username
+        appointment.isInvitee = false
+        appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
+        appointment.invitations += listOf(username)
+        sendTexts(
+            appointmentConfigureViewModel.invitationList,
+            appointment.name,
+            appointment.location,
+            appointment.startDate,
+            appointment.endDate
+        )
 
-        if(isHost) {
-            appointment.invitee = false
-            appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
-            sendTexts(appointmentConfigureViewModel.invitationList, appointment.name, appointment.location, appointment.startDate, appointment.endDate)
+        Log.d(DEBUG, "HOST IS: ${appointment.host}")
 
-            FirebaseClient.get().addAppointment(appointment)
+        FirebaseClient.get().addAppointment(appointment)
 
-        } else {
-            appointment.invitee = true
+        // create appointment for invitees
+        appointment.isInvitee = true
 
-            val listOfInvitees = appointmentConfigureViewModel.invitationList.keys
+        for ((key, value) in appointmentConfigureViewModel.invitationList) {
+            appointment.phoneNumber = key
+            FirebaseClient.get().getUsername(key) {
+                if(it != "") {
+                    appointment.host = it
+//                    FirebaseClient.get().addAppointment(appointment)
+                    Log.d(DEBUG, "HOST IS: ${appointment.host}")
 
-//            appointmentConfigureViewModel.invitationList.remove()
-
-
+                }
+            }
         }
+
+
 
     }
 

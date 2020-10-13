@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import com.bignerdranch.android.lifeboi.weatherapi.WeatherResponse
 import kotlinx.android.synthetic.main.fragment_weather.*
 import org.w3c.dom.Text
+import kotlin.math.round
 
 
 private const val TAG = "WeatherFragment"
@@ -24,14 +25,15 @@ class WeatherFragment : Fragment() {
 
     private var latitude: Double = 42.2626
     private var longitude: Double = -71.8023
-    private lateinit var locationText: TextView
+    private lateinit var feelsLikeText: TextView
     private lateinit var latText: TextView
     private lateinit var longText: TextView
     private lateinit var dayMinTempText: TextView
     private lateinit var dayMaxTempText: TextView
     private lateinit var currentTempText: TextView
     private lateinit var weatherDescText: TextView
-
+    private lateinit var sunriseText: TextView
+    private lateinit var sunsetText: TextView
     private lateinit var dayHumidText: TextView
     private lateinit var dayWindText: TextView
     private lateinit var dayVisText: TextView
@@ -52,7 +54,6 @@ class WeatherFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_weather, container, false)
 
 
-        locationText = view.findViewById( R.id.location ) as TextView
         dayMinTempText = view.findViewById( R.id.dayLow ) as TextView
         dayMaxTempText = view.findViewById( R.id.dayHigh ) as TextView
         currentTempText = view.findViewById(R.id.currentTemp) as TextView
@@ -63,6 +64,11 @@ class WeatherFragment : Fragment() {
         dayVisText = view.findViewById( R.id.visibility ) as TextView
         dayCloudyText = view.findViewById( R.id.clouds ) as TextView
 
+        feelsLikeText = view.findViewById( R.id.feelslike ) as TextView
+
+        sunriseText = view.findViewById( R.id.sunrise ) as TextView
+        sunsetText = view.findViewById( R.id.sunset ) as TextView
+
         latText = view.findViewById(R.id.lat) as TextView
         longText = view.findViewById(R.id.lon ) as TextView
 
@@ -72,21 +78,36 @@ class WeatherFragment : Fragment() {
             Observer { weatherItems ->
                 Log.d(TAG, "Response received: $weatherItems")
 
-                locationText.text = "Worcester"
                 latText.text = "Latitude: ${latitude}"
                 longText.text = "Longitude: ${longitude}"
 
+
+                // windspeed and visibility are not always available for all locations, so we check if they are returned or not
+                var windspeed = weatherItems.daily[0].windspeed
+                if( windspeed == null ){
+                    windspeed = "unavailable"
+                }
+
+                var visibility = weatherItems.daily[0].visibility
+                if( visibility == null ){
+                    visibility = "unavailable"
+                }
+
                 currentTempText.text =
-                    "Current Temp (C): ${(weatherItems.current.temp).toDouble() - 273.15}"
+                    "Current Temp (C): ${ toCelsius( weatherItems.current.temp.toDouble() ) }"
                 weatherDescText.text = weatherItems.current.weather[0].main
 
-                dayMaxTempText.text = "Daily High: ${weatherItems.daily[0].temp.max.toDouble() - 273.15 }"
-                dayMinTempText.text = "Daily Low: ${weatherItems.daily[0].temp.min.toDouble() - 273.15 }"
+                dayMaxTempText.text = "Daily High: ${ toCelsius(weatherItems.daily[0].temp.max.toDouble() ) }"
+                dayMinTempText.text = "Daily Low: ${ toCelsius( weatherItems.daily[0].temp.min.toDouble() ) }"
 
+                feelsLikeText.text = "Feels Like: ${ toCelsius( weatherItems.daily[0].feels_like.day.toDouble() ) }"
+
+                sunriseText.text = "Sunrise Time: ${ weatherItems.daily[0].sunrise }"
+                sunsetText.text = "Sunset Time: ${ weatherItems.daily[0].sunset }"
                 dayHumidText.text = "Daily Humidity: ${weatherItems.daily[0].humidity}"
-                dayVisText.text = "Daily Visibility (m): ${weatherItems.daily[0].visibility}"
+                dayVisText.text = "Daily Visibility (m): ${ visibility }"
                 dayCloudyText.text = "Daily Cloud Level: ${weatherItems.daily[0].clouds}"
-                dayWindText.text = "Daily Windspeed: ${weatherItems.daily[0].windspeed}"
+                dayWindText.text = "Daily Windspeed: ${ windspeed }"
             })
         return view
     }
@@ -95,6 +116,9 @@ class WeatherFragment : Fragment() {
         super.onStart()
     }
 
+    private fun toCelsius( temp: Double ): Double {
+        return round( temp - 273.15 )
+    }
     companion object {
         fun newInstance(lat: Double, lon: Double): WeatherFragment {
             val args = Bundle().apply {

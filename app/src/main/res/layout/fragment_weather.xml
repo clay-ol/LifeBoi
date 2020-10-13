@@ -5,145 +5,165 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="20dp"
     tools:context="com.bignerdranch.android.lifeboi.WeatherFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        android:padding="20dp">
         <TextView
-            android:id="@+id/location"
+            android:id="@+id/WeatherText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView" />
-
+            android:textSize="40dp"
+            android:text="@string/today_s_weather_forecast" />
         <TextView
             android:id="@+id/currentCon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView" />
+            android:textSize="20dp"
+            android:padding="10dp"
+            android:text="@string/currentcondition" />
 
         <TextView
             android:id="@+id/currentTemp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TextView" />
+            android:textSize="20dp"
+            android:padding="10dp"
+            android:text="@string/currenttemp" />
     </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/dayHigh"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/dayhightemp" />
 
             <TextView
                 android:id="@+id/dayLow"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/daylowtemp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/sunrise"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/sunrisetime" />
 
             <TextView
                 android:id="@+id/sunset"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/sunsettime" />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
-            <TextView
-                android:id="@+id/wind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/humidity"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/humidity" />
 
             <TextView
                 android:id="@+id/feelslike"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/feelslike" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/visibility"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/visibility" />
 
             <TextView
                 android:id="@+id/clouds"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/clouds" />
         </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
+        <TextView
+            android:id="@+id/wind"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:textSize="15dp"
+            android:text="@string/windspeed" />
+    </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
 
             <TextView
                 android:id="@+id/lat"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/latitude" />
 
             <TextView
                 android:id="@+id/lon"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="50"
+                android:textSize="15dp"
+                android:text="@string/longitude" />
         </LinearLayout>
 </LinearLayout>

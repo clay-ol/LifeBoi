@@ -14,4 +14,19 @@
     <string name="leglifts">2 Sets of 50 Leg Lifts</string>
     <string name="squats">4 Sets of 50 Squats</string>
     <string name="fitnessToast">You are Fitness!</string>
+    <string name="location">location</string>
+    <string name="currentcondition">currentCondition</string>
+    <string name="currenttemp">currentTemp</string>
+    <string name="dayhightemp">dayHighTemp</string>
+    <string name="daylowtemp">dayLowTemp</string>
+    <string name="sunrisetime">sunriseTime</string>
+    <string name="sunsettime">sunsetTime</string>
+    <string name="windspeed">windspeed</string>
+    <string name="humidity">humidity</string>
+    <string name="feelslike">feelslike</string>
+    <string name="visibility">visibility</string>
+    <string name="clouds">clouds</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="today_s_weather_forecast">Today\'s Weather Forecast</string>
 </resources>

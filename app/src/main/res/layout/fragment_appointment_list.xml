@@ -23,6 +23,6 @@
         android:gravity="center"
         android:src="@drawable/add_appointment"
         android:scaleType="fitCenter"
-        android:text="TEST" />
+        />
 
 </RelativeLayout>
