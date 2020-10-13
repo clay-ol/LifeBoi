@@ -25,7 +25,7 @@ class FirebaseClient private constructor(context: Context) {
         return database
     }
     
-    fun signUp(data: HashMap<String, String>, username: String) {
+    fun addUser(data: HashMap<String, String>, username: String) {
         database.collection("users").document(username)
             .set(data)
             .addOnSuccessListener {
@@ -36,22 +36,33 @@ class FirebaseClient private constructor(context: Context) {
             }
     }
 
+    fun deleteUser(username: String) {
+        database.collection("users").document(username)
+            .delete()
+            .addOnSuccessListener {
+                Log.d(TAG, "Deleted Document Successfully!")
+            }
+            .addOnFailureListener { e ->
+                Log.d(TAG, "Deletion Operation Failed", e)
+            }
+    }
+
     fun checkForExistingUser(username: String, phonenumber: String, callback: (Boolean) -> Unit) {
         database.collection("users").document(username)
             .get()
             .addOnSuccessListener { document ->
                 if (!document.exists()) {
-                    if (document.getString("phone_number").equals(phonenumber)) {
+                    if (!document.getString("phone_number").equals(phonenumber)) {
                         Log.d(TAG, "No Existing Username: ${username} and Phone Number: ${phonenumber} Found")
-                        callback.invoke(true)
+                        callback.invoke(false)
 
                     } else {
                         Log.d(TAG, "Unique Username: ${username}, but Existing Phone Number: ${phonenumber} Found")
-                        callback.invoke(false)
+                        callback.invoke(true)
                     }
                 } else {
                     Log.d(TAG, "Found Existing Username: ${username}")
-                    callback.invoke(false)
+                    callback.invoke(true)
                 }
             }
 
@@ -86,23 +97,29 @@ class FirebaseClient private constructor(context: Context) {
             }
     }
 
-    fun getPhoneNumber(username: String, callback:(String) -> Unit) {
-        database.collection("users").document(username)
+    fun getUsername(phonenumber: String, callback:(String) -> Unit) {
+        database.collection("users")
+            .whereEqualTo("phone_number", phonenumber)
             .get()
+
             .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    callback.invoke(document.get("phone_number").toString())
+                if (document.documents.size != 0) {
+                    val firstDocument = document.documents[0]
+                    val username = firstDocument.id
+
+                    callback.invoke(username)
 
                 } else {
-                    Log.d(TAG, "Username: $username Does Not Exist in Database")
+                    Log.d(TAG, "Phone Number: $phonenumber Does Not Exist in Database")
                     callback.invoke("")
                 }
             }
             .addOnFailureListener { e ->
                 callback.invoke("")
-                Log.d(TAG, "Failed to get Phone Number with Username: $username", e)
+                Log.d(TAG, "Failed to get Username with Phone Number: $phonenumber", e)
             }
     }
+
 
     fun getAppointment(username: String, callback:(Appointment) -> Unit) {
         val query = database.collection("appointments")
@@ -114,7 +131,7 @@ class FirebaseClient private constructor(context: Context) {
                     val firstDocument = document.documents[0]
                     val appointment = Appointment(
                         id = firstDocument.get("id").toString(),
-                        location = firstDocument.get("location") as GeoPoint,
+                        location = firstDocument.get("location").toString(),
                         host = firstDocument.get("host").toString(),
                         name = firstDocument.get("name").toString(),
                         phoneNumber = firstDocument.get("phone_number").toString(),
@@ -148,16 +165,22 @@ class FirebaseClient private constructor(context: Context) {
     }
 
 
-    fun deleteAppointment(id: String, username: String) {
-        val myRef = database.collection("appointments")
+
+    fun deleteAppointment(id: String, phonenumber: String, invitee: Boolean) {
+
+        var myRef = database.collection("appointments")
             .whereEqualTo("id", id)
-            .whereEqualTo("host", username)
+
+        if (invitee) {
+            myRef = database.collection("appointments")
+                .whereEqualTo("id", id)
+                .whereEqualTo("phoneNumber", phonenumber)
+        }
 
         myRef.get()
-            .addOnSuccessListener {document ->
-                if (document.documents.size != 0) {
-                    val targetedDocument = document.documents[0].id
-                    Log.d(TAG, "Obtained the Targeted Document: $targetedDocument")
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val targetedDocument = document.id
 
                     database.collection("appointments").document(targetedDocument)
                         .delete()
@@ -167,9 +190,6 @@ class FirebaseClient private constructor(context: Context) {
                         .addOnFailureListener { e ->
                             Log.d(TAG, "Deletion Operation Failed", e)
                         }
-
-                } else {
-                    Log.d(TAG, "Unable to Find Document With ID=${id}")
                 }
             }
 

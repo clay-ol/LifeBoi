@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +12,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.lifeboi.database.FirebaseClient
-import com.bignerdranch.android.lifeboi.datamodel.Appointment
-import java.util.*
 import kotlin.collections.HashMap
 
 private const val REQUEST_HOME_SCREEN = 0
@@ -247,10 +244,10 @@ class SignUpFragment: Fragment() {
                 "password" to password
             )
 
-            if (!foundEmpty(userAccount) && checkPhoneNumber(phoneNumber)) {
+            if (!foundEmpty(userAccount) && checkPhoneNumber(phoneNumber) && username != "foobar") {
                 firebaseClient.checkForExistingUser(username, phoneNumber) {result ->
-                    if (result) {
-                        firebaseClient.signUp(userAccount, username)
+                    if (!result) {
+                        firebaseClient.addUser(userAccount, username)
                         val intent = HomeActivity.newIntent((context), username)
                         startActivityForResult(intent, REQUEST_HOME_SCREEN)
 
