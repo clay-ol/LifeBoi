@@ -94,8 +94,6 @@ class ConfigureAppointmentsFragment : Fragment() {
                 appointmentConfigureViewModel.endDate = chosenDate.toString()
             }
         }
-
-//        Log.d(DEBUG, "Received $chosenDate")
     }
 
 
@@ -106,6 +104,7 @@ class ConfigureAppointmentsFragment : Fragment() {
         nameEditText.apply {
             addTextChangedListener(textWatcher)
         }
+
         startDateEditText.apply {
             isFocusable = false
             setOnClickListener {
@@ -147,23 +146,13 @@ class ConfigureAppointmentsFragment : Fragment() {
             if(nameEditText.text.isEmpty()) {
                 Toast.makeText(context, "Please name the event", Toast.LENGTH_SHORT).show()
             } else {
-                val appointment = Appointment()
-                appointment.startDate = startDateEditText.text.toString()
-                appointment.endDate = endDateEditText.text.toString()
-                appointment.name = nameEditText.text.toString()
-                appointment.host = username
-                appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
-                appointment.isInvitee = true
-                FirebaseClient.get().addAppointment(appointment)
 
+                commitAppointment(true)
                 clearAppointment()
                 callbacks?.onSubmitSelected()
                 Toast.makeText(context, "Appointment made...", Toast.LENGTH_LONG).show()
 
             }
-
-            Log.d(DEBUG, "Submit button worked")
-
         }
 
         invitationButton.apply {
@@ -179,6 +168,7 @@ class ConfigureAppointmentsFragment : Fragment() {
 
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -275,11 +265,16 @@ class ConfigureAppointmentsFragment : Fragment() {
         nameEditText.setText("")
         locationEditText.setText("")
         inviteeChipGroup.removeAllViews()
-        Log.d(DEBUG, "${appointmentConfigureViewModel.invitationList.size}")
     }
 
     private fun addInvitation(invitee: String, number: String) {
         var doesExist = false
+
+        val numberStripped = number
+            .replace("(","")
+            .replace(")", "")
+            .replace("-", "")
+            .replace(" ", "")
 
         for(i in 0 until inviteeChipGroup.childCount) {
             val chipName : Chip = inviteeChipGroup.getChildAt(i) as Chip
@@ -298,7 +293,43 @@ class ConfigureAppointmentsFragment : Fragment() {
                 appointmentConfigureViewModel.invitationList.remove(invitee)
             }
             inviteeChipGroup.addView(inviteeChip)
-            appointmentConfigureViewModel.invitationList[number] = invitee
+            appointmentConfigureViewModel.invitationList[numberStripped] = invitee
+        }
+
+    }
+
+    private fun sendTexts(list: HashMap<String, String>, event: String, location: String, start: String, end: String) {
+
+        for((key, value) in list) {
+            val message = "Hey, $value! $username has invited you to $event at $location starting at $start to $end"
+
+            TextMessenger.newInstance().send(key, message)
+        }
+
+    }
+
+    private fun commitAppointment(isHost: Boolean) {
+        val appointment = Appointment()
+        appointment.startDate = startDateEditText.text.toString()
+        appointment.endDate = endDateEditText.text.toString()
+        appointment.name = nameEditText.text.toString()
+        appointment.host = username
+
+        if(isHost) {
+            appointment.isInvitee = false
+            appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
+            sendTexts(appointmentConfigureViewModel.invitationList, appointment.name, appointment.location.toString(), appointment.startDate, appointment.endDate)
+
+            FirebaseClient.get().addAppointment(appointment)
+
+        } else {
+            appointment.isInvitee = true
+
+            val listOfInvitees = appointmentConfigureViewModel.invitationList.keys
+
+//            appointmentConfigureViewModel.invitationList.remove()
+
+
         }
 
     }
