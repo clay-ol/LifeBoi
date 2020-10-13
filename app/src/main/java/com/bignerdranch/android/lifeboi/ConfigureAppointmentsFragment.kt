@@ -2,13 +2,8 @@ package com.bignerdranch.android.lifeboi
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Service
 import android.content.Context
-import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,13 +16,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.view.get
-import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import com.bignerdranch.android.lifeboi.database.FirebaseClient
-import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.twilioapi.TextMessenger
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
 import com.google.android.material.chip.Chip
@@ -140,6 +130,13 @@ class ConfigureAppointmentsFragment : Fragment() {
             Log.d(DEBUG, "Submit button worked")
 
         }
+//
+//        inviteeChipGroup.apply {
+//            setOnClickListener {
+//                Log.d(DEBUG, "Removed chip from chipgroup")
+//                removeView(focusedChild)
+//            }
+//        }
 
         invitationButton.apply {
             isFocusable = false
@@ -215,25 +212,8 @@ class ConfigureAppointmentsFragment : Fragment() {
                         c?.close()
                         if (number == "") number = "This contact is not saved into your device"
                         else {
-
-                            var doesExist = false
-
-                            for(i in 0 until inviteeChipGroup.childCount) {
-                                val chipName : Chip = inviteeChipGroup.getChildAt(i) as Chip
-                                if(chipName.text == invitee) {
-                                    doesExist = true
-                                    break;
-                                }
-                            }
-
-                            if(!doesExist) {
-                                val inviteeChip = Chip(requireContext())
-                                inviteeChip.text = invitee
-                                inviteeChipGroup.addView(inviteeChip)
-                            }
-
+                            addInvitation(invitee)
                         }
-                        // TODO: update invitation field
                         Log.d(DEBUG, "$invitee, $number")
 
                     }
@@ -258,6 +238,29 @@ class ConfigureAppointmentsFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         callbacks = null
+    }
+
+    private fun addInvitation(invitee: String) {
+        var doesExist = false
+
+        for(i in 0 until inviteeChipGroup.childCount) {
+            val chipName : Chip = inviteeChipGroup.getChildAt(i) as Chip
+            if(chipName.text == invitee) {
+                doesExist = true
+                break;
+            }
+        }
+
+        if(!doesExist) {
+            val inviteeChip = Chip(requireContext())
+            inviteeChip.text = invitee
+            inviteeChip.isCloseIconVisible = true
+            inviteeChip.setOnCloseIconClickListener {
+                inviteeChipGroup.removeView(inviteeChip)
+            }
+            inviteeChipGroup.addView(inviteeChip)
+        }
+
     }
 
     companion object {
