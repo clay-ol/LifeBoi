@@ -29,4 +29,13 @@
     <string name="latitude">latitude</string>
     <string name="longitude">longitude</string>
     <string name="today_s_weather_forecast">Today\'s Weather Forecast</string>
+
+    <string name="view_name">Event</string>
+    <string name="view_start">Start</string>
+    <string name="view_end">End</string>
+    <string name="view_location">Location</string>
+    <string name="view_host">Host</string>
+    <string name="view_back_button">Back</string>
+    <string name="view_delete_button">Delete</string>
+
 </resources>

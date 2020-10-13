@@ -328,7 +328,7 @@ class ConfigureAppointmentsFragment : Fragment() {
 
         Log.d(DEBUG, "HOST IS: ${appointment.host}")
 
-//        FirebaseClient.get().addAppointment(appointment)
+        FirebaseClient.get().addAppointment(appointment)
 
         // create appointment for invitees
         appointment.invitee = true

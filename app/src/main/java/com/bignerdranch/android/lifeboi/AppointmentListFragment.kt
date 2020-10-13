@@ -28,7 +28,7 @@ class AppointmentListFragment : Fragment() {
 
     interface Callbacks {
         fun onAddSelected()
-        fun onEditSelected(UUID: String)
+        fun onEditSelected(appointment: Appointment)
     }
 
     private lateinit var appointmentRecyclerView: RecyclerView
@@ -130,7 +130,7 @@ class AppointmentListFragment : Fragment() {
         }
 
         override fun onClick(view: View) {
-            callbacks?.onEditSelected(appointment.id)
+            callbacks?.onEditSelected(appointment)
         }
 
         fun bind(appointment: Appointment) {
