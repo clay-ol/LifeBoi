@@ -34,6 +34,14 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
         }
     }
 
+    override fun onSubmitSelected() {
+        val fragment = AppointmentListFragment.newInstance(username)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_appointment_container, fragment)
+            .commit()
+    }
+
     override fun onDatePickSelected(electedDate: Int) {
         Log.d(DEBUG, "onEditSelected() called")
         dateType = electedDate

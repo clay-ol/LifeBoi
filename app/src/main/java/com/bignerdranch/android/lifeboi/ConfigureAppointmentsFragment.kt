@@ -37,6 +37,7 @@ class ConfigureAppointmentsFragment : Fragment() {
 
     interface Callbacks {
         fun onDatePickSelected(electedDate: Int)
+        fun onSubmitSelected()
     }
 
     private lateinit var startDateEditText: EditText
@@ -143,6 +144,8 @@ class ConfigureAppointmentsFragment : Fragment() {
                 Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
             } else {
                 clearAppointment()
+                callbacks?.onSubmitSelected()
+                Toast.makeText(context, "Appointment made...", Toast.LENGTH_LONG).show()
 //                val appointment = Appointment()
 //                FirebaseClient.get().addAppointment()
             }
