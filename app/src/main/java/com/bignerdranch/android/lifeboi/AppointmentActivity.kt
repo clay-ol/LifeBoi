@@ -41,7 +41,6 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
             .commit()
     }
 

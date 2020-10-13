@@ -8,6 +8,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -51,6 +53,21 @@ class ConfigureAppointmentsFragment : Fragment() {
     private var callbacks: Callbacks? = null
     private var dateType: Int = 3
 
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) {
+            appointmentConfigureViewModel.location = locationEditText.text.toString()
+            appointmentConfigureViewModel.nameOfEvent = nameEditText.text.toString()
+        }
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +79,6 @@ class ConfigureAppointmentsFragment : Fragment() {
         appointmentConfigureViewModel = activity?.let { ViewModelProviders.of(it).get(
             AppointmentConfigureViewModel::class.java
         ) }!!
-
 
         when (dateType) {
             1 -> appointmentConfigureViewModel.startDate = chosenDate.toString()
@@ -81,6 +97,9 @@ class ConfigureAppointmentsFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        nameEditText.apply {
+            addTextChangedListener(textWatcher)
+        }
         startDateEditText.apply {
             isFocusable = false
             setOnClickListener {
@@ -96,8 +115,6 @@ class ConfigureAppointmentsFragment : Fragment() {
         }
 
         locationEditText.apply {
-            // TODO: for now leave it as it is...
-            isFocusable = false
 //            val locationManager = activity?.getSystemService(LOCATION_SERVICE) as LocationManager
 //            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 //            var gmmLocation = ""
@@ -110,12 +127,14 @@ class ConfigureAppointmentsFragment : Fragment() {
 //
 //            val gmmLocationUri = Uri.parse(gmmLocation)
 //            val locationIntent = Intent(Intent.ACTION_VIEW, gmmLocationUri).setPackage("com.google.android.apps.maps")
+
+            addTextChangedListener(textWatcher)
             setOnClickListener {
-                val msg = TextMessenger.newInstance()
-                msg.send("7603358848", "HI TED")
-//                startActivityForResult(locationIntent, GPS_LOCATION)
-//                Log.d(DEBUG, "${location?.longitude}")
+//                val msg = TextMessenger.newInstance()
+//                msg.send("7603358848", "HI TED")
             }
+
+
         }
 
         submitButton.setOnClickListener {
@@ -123,6 +142,7 @@ class ConfigureAppointmentsFragment : Fragment() {
                 || nameEditText.text.isEmpty()) {
                 Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
             } else {
+                clearAppointment()
 //                val appointment = Appointment()
 //                FirebaseClient.get().addAppointment()
             }
@@ -130,13 +150,6 @@ class ConfigureAppointmentsFragment : Fragment() {
             Log.d(DEBUG, "Submit button worked")
 
         }
-//
-//        inviteeChipGroup.apply {
-//            setOnClickListener {
-//                Log.d(DEBUG, "Removed chip from chipgroup")
-//                removeView(focusedChild)
-//            }
-//        }
 
         invitationButton.apply {
             isFocusable = false
@@ -149,12 +162,6 @@ class ConfigureAppointmentsFragment : Fragment() {
                 startActivityForResult(pickContactIntent, CONTACT)
             }
 
-//            val packageManager: PackageManager = requireActivity().packageManager
-//            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(pickContactIntent, PackageManager.MATCH_DEFAULT_ONLY)
-//
-//            if(resolvedAct == null) {
-//                isEnabled = false
-//            }
         }
     }
 
@@ -212,7 +219,7 @@ class ConfigureAppointmentsFragment : Fragment() {
                         c?.close()
                         if (number == "") number = "This contact is not saved into your device"
                         else {
-                            addInvitation(invitee)
+                            addInvitation(invitee, number)
                         }
                         Log.d(DEBUG, "$invitee, $number")
 
@@ -225,6 +232,12 @@ class ConfigureAppointmentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        for((key, value) in appointmentConfigureViewModel.invitationList) {
+            addInvitation(value, key)
+        }
+
+        locationEditText.setText(appointmentConfigureViewModel.location)
+        nameEditText.setText(appointmentConfigureViewModel.nameOfEvent)
         startDateEditText.setText(appointmentConfigureViewModel.startDate)
         endDateEditText.setText(appointmentConfigureViewModel.endDate)
 
@@ -240,7 +253,16 @@ class ConfigureAppointmentsFragment : Fragment() {
         callbacks = null
     }
 
-    private fun addInvitation(invitee: String) {
+    private fun clearAppointment() {
+        appointmentConfigureViewModel = appointmentConfigureViewModel.resetAppointment()
+        endDateEditText.setText(LocalDate.now().toString())
+        startDateEditText.setText(LocalDate.now().toString())
+        nameEditText.setText("")
+        locationEditText.setText("")
+        inviteeChipGroup.removeAllViews()
+    }
+
+    private fun addInvitation(invitee: String, number: String) {
         var doesExist = false
 
         for(i in 0 until inviteeChipGroup.childCount) {
@@ -257,8 +279,10 @@ class ConfigureAppointmentsFragment : Fragment() {
             inviteeChip.isCloseIconVisible = true
             inviteeChip.setOnCloseIconClickListener {
                 inviteeChipGroup.removeView(inviteeChip)
+                appointmentConfigureViewModel.invitationList.remove(invitee)
             }
             inviteeChipGroup.addView(inviteeChip)
+            appointmentConfigureViewModel.invitationList[number] = invitee
         }
 
     }
