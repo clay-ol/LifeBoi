@@ -20,6 +20,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.bignerdranch.android.lifeboi.database.FirebaseClient
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.twilioapi.TextMessenger
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
 import com.google.android.material.chip.Chip
@@ -90,7 +92,7 @@ class ConfigureAppointmentsFragment : Fragment() {
             }
         }
 
-        Log.d(DEBUG, "Received $chosenDate")
+//        Log.d(DEBUG, "Received $chosenDate")
     }
 
 
@@ -139,15 +141,21 @@ class ConfigureAppointmentsFragment : Fragment() {
         }
 
         submitButton.setOnClickListener {
-            if(startDateEditText.text.isEmpty() || endDateEditText.text.isEmpty()
-                || nameEditText.text.isEmpty()) {
-                Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
+            if(nameEditText.text.isEmpty()) {
+                Toast.makeText(context, "Please name the event", Toast.LENGTH_SHORT).show()
             } else {
+//                val appointment = Appointment()
+//                appointment.startDate = startDateEditText.text.toString()
+//                appointment.endDate = endDateEditText.text.toString()
+//                appointment.name = nameEditText.text.toString()
+//                appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
+//                appointment.isInvitee = true
+//                FirebaseClient.get().addAppointment(appointment)
+
                 clearAppointment()
                 callbacks?.onSubmitSelected()
                 Toast.makeText(context, "Appointment made...", Toast.LENGTH_LONG).show()
-//                val appointment = Appointment()
-//                FirebaseClient.get().addAppointment()
+
             }
 
             Log.d(DEBUG, "Submit button worked")
@@ -257,7 +265,7 @@ class ConfigureAppointmentsFragment : Fragment() {
     }
 
     private fun clearAppointment() {
-        appointmentConfigureViewModel = appointmentConfigureViewModel.resetAppointment()
+        appointmentConfigureViewModel.resetAppointment()
         endDateEditText.setText(LocalDate.now().toString())
         startDateEditText.setText(LocalDate.now().toString())
         nameEditText.setText("")

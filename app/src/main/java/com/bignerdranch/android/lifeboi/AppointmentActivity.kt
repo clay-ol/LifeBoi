@@ -63,7 +63,7 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
             .commit()
     }
 
-    override fun onEditSelected() {
+    override fun onEditSelected(UUID: String) {
 //        Log.d(DEBUG, "onEditSelected() called")
 //        val fragment = CalendarFragment.newInstance()
 //        supportFragmentManager

@@ -27,13 +27,13 @@ class AppointmentListFragment : Fragment() {
 
     interface Callbacks {
         fun onAddSelected()
-        fun onEditSelected()
+        fun onEditSelected(UUID: String)
     }
 
     private lateinit var appointmentRecyclerView: RecyclerView
     private lateinit var appointmentButton: ImageButton
 
-    private var adapter: AppointmentAdapter? = null
+    private lateinit var adapter: AppointmentAdapter
     private var callbacks: Callbacks? = null
 
     private var username = ""
@@ -81,8 +81,17 @@ class AppointmentListFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        adapter.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        adapter.startListening()
+    }
+
     private fun updateUI() {
-//        val appointments = appointmentListViewModel.appointments
 
         val db = FirebaseClient.get().getDatabase()
         Log.d("FirebaseClient", "RecyclerView Username: $username")
@@ -93,7 +102,7 @@ class AppointmentListFragment : Fragment() {
             .setQuery(query, Appointment::class.java)
             .build()
 
-        val adapter = AppointmentAdapter(options)
+        adapter = AppointmentAdapter(options)
         appointmentRecyclerView.adapter = adapter
     }
 
@@ -119,7 +128,7 @@ class AppointmentListFragment : Fragment() {
         }
 
         override fun onClick(view: View) {
-            Toast.makeText(context, "TEST", Toast.LENGTH_SHORT).show()
+            callbacks?.onEditSelected(appointment.id)
         }
 
         fun bind(appointment: Appointment) {
