@@ -54,7 +54,7 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onAddSelected() {
-        val fragment = ConfigureAppointmentsFragment.newInstance(LocalDate.now(), dateType)
+        val fragment = ConfigureAppointmentsFragment.newInstance(LocalDate.now(), dateType, username)
 
         supportFragmentManager
             .beginTransaction()
@@ -75,7 +75,7 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onDateSelected(date: LocalDate) {
-        val fragment = ConfigureAppointmentsFragment.newInstance(date, dateType)
+        val fragment = ConfigureAppointmentsFragment.newInstance(date, dateType, username)
 
         supportFragmentManager
             .beginTransaction()

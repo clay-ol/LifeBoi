@@ -31,6 +31,7 @@ import java.time.LocalDate
 
 private const val CHOSEN_DATE = "date_of_choice"
 private const val ELECTED_DATE = "is_start_date"
+private const val USERNAME = "username_configure"
 private const val CONTACT = 1
 private const val GPS_LOCATION = 2
 private const val END_DATE = "end_date"
@@ -52,7 +53,7 @@ class ConfigureAppointmentsFragment : Fragment() {
     private lateinit var appointmentConfigureViewModel: AppointmentConfigureViewModel
 
     private lateinit var chosenDate: LocalDate
-
+    private lateinit var username: String
     private var callbacks: Callbacks? = null
     private var dateType: Int = 3
 
@@ -79,6 +80,8 @@ class ConfigureAppointmentsFragment : Fragment() {
 
         chosenDate = arguments?.getSerializable(CHOSEN_DATE) as LocalDate
         dateType = arguments?.getSerializable(ELECTED_DATE) as Int
+        username = arguments?.getSerializable(USERNAME) as String
+
         appointmentConfigureViewModel = activity?.let { ViewModelProviders.of(it).get(
             AppointmentConfigureViewModel::class.java
         ) }!!
@@ -148,6 +151,7 @@ class ConfigureAppointmentsFragment : Fragment() {
                 appointment.startDate = startDateEditText.text.toString()
                 appointment.endDate = endDateEditText.text.toString()
                 appointment.name = nameEditText.text.toString()
+                appointment.host = username
                 appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
                 appointment.isInvitee = true
                 FirebaseClient.get().addAppointment(appointment)
@@ -302,10 +306,11 @@ class ConfigureAppointmentsFragment : Fragment() {
     companion object {
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun newInstance(date: LocalDate, electedDate: Int) : ConfigureAppointmentsFragment {
+        fun newInstance(date: LocalDate, electedDate: Int, username: String) : ConfigureAppointmentsFragment {
             val args = Bundle().apply {
                 putSerializable(CHOSEN_DATE, date)
                 putSerializable(ELECTED_DATE, electedDate)
+                putSerializable(USERNAME, username)
             }
 
             return ConfigureAppointmentsFragment().apply {
