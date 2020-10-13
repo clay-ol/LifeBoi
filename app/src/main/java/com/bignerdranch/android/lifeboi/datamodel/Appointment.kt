@@ -12,3 +12,4 @@ class Appointment(var id: String = UUID.randomUUID().toString(),
                        var endDate: String = "",
                        var invitee: Boolean = false,
                        var phoneNumber: String = "") : Serializable
+

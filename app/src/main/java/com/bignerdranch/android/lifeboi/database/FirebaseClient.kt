@@ -145,6 +145,7 @@ class FirebaseClient private constructor(context: Context) {
                     callback.invoke(appointment)
 
                 } else {
+                    callback.invoke(Appointment(id = "empty"))
                     Log.d(TAG, "No Appointments Found for User: $username")
                 }
             }
@@ -185,16 +186,16 @@ class FirebaseClient private constructor(context: Context) {
                     database.collection("appointments").document(targetedDocument)
                         .delete()
                         .addOnSuccessListener {
-                            Log.d(TAG, "Deleted Document Successfully!")
+                            Log.d(TAG, "Deleted Appointment Document Successfully!")
                         }
                         .addOnFailureListener { e ->
-                            Log.d(TAG, "Deletion Operation Failed", e)
+                            Log.d(TAG, "Deletion Appointment Operation Failed", e)
                         }
                 }
             }
 
             .addOnFailureListener { e ->
-                Log.d(TAG, "Getting Appointment Failed!", e)
+                Log.d(TAG, "Getting Appointment Deletion Failed!", e)
             }
     }
 

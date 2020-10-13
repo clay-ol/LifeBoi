@@ -74,11 +74,15 @@ class HomeFragment : Fragment() {
         fitnessButton = view.findViewById(R.id.fitness_button) as Button
 
         firebaseClient.getAppointment(username) {result ->
-            val appointmentName = "Appointment: ${result.name}"
-            val appointmentDate = "Starts on ${result.startDate} and Ends on ${result.endDate}"
 
-            appointmentNameTextView.text = appointmentName
-            appointmentDateTextView.text = appointmentDate
+            if (result.id != "empty") {
+                val appointmentName = "Appointment: ${result.name}"
+                val appointmentDate = "Starts on ${result.startDate} and Ends on ${result.endDate}"
+
+                appointmentNameTextView.text = appointmentName
+                appointmentDateTextView.text = appointmentDate
+            }
+
         }
 
         weatherButton.setOnClickListener {
