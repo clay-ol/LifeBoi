@@ -2,17 +2,14 @@ package com.bignerdranch.android.lifeboi
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Service
 import android.content.Context
-import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,16 +18,20 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.bignerdranch.android.lifeboi.database.FirebaseClient
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.twilioapi.TextMessenger
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import java.time.LocalDate
 
 
 private const val CHOSEN_DATE = "date_of_choice"
 private const val ELECTED_DATE = "is_start_date"
+private const val USERNAME = "username_configure"
 private const val CONTACT = 1
 private const val GPS_LOCATION = 2
 private const val END_DATE = "end_date"
@@ -39,20 +40,37 @@ class ConfigureAppointmentsFragment : Fragment() {
 
     interface Callbacks {
         fun onDatePickSelected(electedDate: Int)
+        fun onSubmitSelected()
     }
 
     private lateinit var startDateEditText: EditText
     private lateinit var endDateEditText: EditText
     private lateinit var nameEditText: EditText
     private lateinit var locationEditText: EditText
-    private lateinit var invitationEditText: EditText
+    private lateinit var invitationButton: Button
     private lateinit var submitButton: Button
+    private lateinit var inviteeChipGroup: ChipGroup
     private lateinit var appointmentConfigureViewModel: AppointmentConfigureViewModel
 
     private lateinit var chosenDate: LocalDate
-
+    private lateinit var username: String
     private var callbacks: Callbacks? = null
     private var dateType: Int = 3
+
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(p0: Editable?) {
+            appointmentConfigureViewModel.location = locationEditText.text.toString()
+            appointmentConfigureViewModel.nameOfEvent = nameEditText.text.toString()
+        }
+
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,10 +80,11 @@ class ConfigureAppointmentsFragment : Fragment() {
 
         chosenDate = arguments?.getSerializable(CHOSEN_DATE) as LocalDate
         dateType = arguments?.getSerializable(ELECTED_DATE) as Int
+        username = arguments?.getSerializable(USERNAME) as String
+
         appointmentConfigureViewModel = activity?.let { ViewModelProviders.of(it).get(
             AppointmentConfigureViewModel::class.java
         ) }!!
-
 
         when (dateType) {
             1 -> appointmentConfigureViewModel.startDate = chosenDate.toString()
@@ -75,14 +94,16 @@ class ConfigureAppointmentsFragment : Fragment() {
                 appointmentConfigureViewModel.endDate = chosenDate.toString()
             }
         }
-
-        Log.d(DEBUG, "Received $chosenDate")
     }
 
 
     @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
+
+        nameEditText.apply {
+            addTextChangedListener(textWatcher)
+        }
 
         startDateEditText.apply {
             isFocusable = false
@@ -99,8 +120,6 @@ class ConfigureAppointmentsFragment : Fragment() {
         }
 
         locationEditText.apply {
-            // TODO: for now leave it as it is...
-            isFocusable = false
 //            val locationManager = activity?.getSystemService(LOCATION_SERVICE) as LocationManager
 //            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
 //            var gmmLocation = ""
@@ -113,28 +132,30 @@ class ConfigureAppointmentsFragment : Fragment() {
 //
 //            val gmmLocationUri = Uri.parse(gmmLocation)
 //            val locationIntent = Intent(Intent.ACTION_VIEW, gmmLocationUri).setPackage("com.google.android.apps.maps")
+
+            addTextChangedListener(textWatcher)
             setOnClickListener {
-                val msg = TextMessenger.newInstance()
-                msg.send("7603358848", "HI TED")
-//                startActivityForResult(locationIntent, GPS_LOCATION)
-//                Log.d(DEBUG, "${location?.longitude}")
+//                val msg = TextMessenger.newInstance()
+//                msg.send("7603358848", "HI TED")
             }
+
+
         }
 
         submitButton.setOnClickListener {
-            if(startDateEditText.text.isEmpty() || endDateEditText.text.isEmpty()
-                || nameEditText.text.isEmpty()) {
-                Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
+            if(nameEditText.text.isEmpty()) {
+                Toast.makeText(context, "Please name the event", Toast.LENGTH_SHORT).show()
             } else {
 
-                // TODO: write to db
+                commitAppointment(true)
+                clearAppointment()
+                callbacks?.onSubmitSelected()
+                Toast.makeText(context, "Appointment made...", Toast.LENGTH_LONG).show()
+
             }
-
-            Log.d(DEBUG, "Submit button worked")
-
         }
 
-        invitationEditText.apply {
+        invitationButton.apply {
             isFocusable = false
             val pickContactIntent = Intent(
                 Intent.ACTION_PICK,
@@ -145,14 +166,9 @@ class ConfigureAppointmentsFragment : Fragment() {
                 startActivityForResult(pickContactIntent, CONTACT)
             }
 
-//            val packageManager: PackageManager = requireActivity().packageManager
-//            val resolvedAct: ResolveInfo? = packageManager.resolveActivity(pickContactIntent, PackageManager.MATCH_DEFAULT_ONLY)
-//
-//            if(resolvedAct == null) {
-//                isEnabled = false
-//            }
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -165,8 +181,9 @@ class ConfigureAppointmentsFragment : Fragment() {
         endDateEditText = view.findViewById(R.id.appointment_end) as EditText
         nameEditText = view.findViewById(R.id.appointment_name) as EditText
         locationEditText = view.findViewById(R.id.appointment_location) as EditText
-        invitationEditText = view.findViewById(R.id.appointment_invite) as EditText
+        invitationButton = view.findViewById(R.id.appointment_invite) as Button
         submitButton = view.findViewById(R.id.appointment_submit) as Button
+        inviteeChipGroup = view.findViewById(R.id.appointment_chip) as ChipGroup
 
         return view
     }
@@ -189,11 +206,11 @@ class ConfigureAppointmentsFragment : Fragment() {
                         }
 
                         it.moveToFirst()
-                        val suspect = it.getString(0)
+                        val invitee = it.getString(0)
 
-                        var name = ""
+                        var number = ""
 
-                        val selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + suspect + "%'"
+                        val selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + invitee + "%'"
                         val projection = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
                         val c = context!!.contentResolver.query(
                             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -201,14 +218,15 @@ class ConfigureAppointmentsFragment : Fragment() {
                         )
                         if (c?.moveToFirst()!!) {
                             if (c != null) {
-                                name = c.getString(0)
+                                number = c.getString(0)
                             }
                         }
                         c?.close()
-                        if (name == "") name = "This contact is not saved into your device"
-
-                        // TODO: update invitation field
-                        Log.d(DEBUG, "$suspect, $name")
+                        if (number == "") number = "This contact is not saved into your device"
+                        else {
+                            addInvitation(invitee, number)
+                        }
+                        Log.d(DEBUG, "$invitee, $number")
 
                     }
             }
@@ -219,6 +237,12 @@ class ConfigureAppointmentsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        for((key, value) in appointmentConfigureViewModel.invitationList) {
+            addInvitation(value, key)
+        }
+
+        locationEditText.setText(appointmentConfigureViewModel.location)
+        nameEditText.setText(appointmentConfigureViewModel.nameOfEvent)
         startDateEditText.setText(appointmentConfigureViewModel.startDate)
         endDateEditText.setText(appointmentConfigureViewModel.endDate)
 
@@ -234,13 +258,90 @@ class ConfigureAppointmentsFragment : Fragment() {
         callbacks = null
     }
 
+    private fun clearAppointment() {
+        appointmentConfigureViewModel.resetAppointment()
+        endDateEditText.setText(LocalDate.now().toString())
+        startDateEditText.setText(LocalDate.now().toString())
+        nameEditText.setText("")
+        locationEditText.setText("")
+        inviteeChipGroup.removeAllViews()
+    }
+
+    private fun addInvitation(invitee: String, number: String) {
+        var doesExist = false
+
+        val numberStripped = number
+            .replace("(","")
+            .replace(")", "")
+            .replace("-", "")
+            .replace(" ", "")
+
+        for(i in 0 until inviteeChipGroup.childCount) {
+            val chipName : Chip = inviteeChipGroup.getChildAt(i) as Chip
+            if(chipName.text == invitee) {
+                doesExist = true
+                break
+            }
+        }
+
+        if(!doesExist) {
+            val inviteeChip = Chip(requireContext())
+            inviteeChip.text = invitee
+            inviteeChip.isCloseIconVisible = true
+            inviteeChip.setOnCloseIconClickListener {
+                inviteeChipGroup.removeView(inviteeChip)
+                appointmentConfigureViewModel.invitationList.remove(invitee)
+            }
+            inviteeChipGroup.addView(inviteeChip)
+            appointmentConfigureViewModel.invitationList[numberStripped] = invitee
+        }
+
+    }
+
+    private fun sendTexts(list: HashMap<String, String>, event: String, location: String, start: String, end: String) {
+
+        for((key, value) in list) {
+            val message = "Hey, $value! $username has invited you to $event at $location starting at $start to $end"
+
+            TextMessenger.newInstance().send(key, message)
+        }
+
+    }
+
+    private fun commitAppointment(isHost: Boolean) {
+        val appointment = Appointment()
+        appointment.startDate = startDateEditText.text.toString()
+        appointment.endDate = endDateEditText.text.toString()
+        appointment.name = nameEditText.text.toString()
+        appointment.host = username
+
+        if(isHost) {
+            appointment.isInvitee = false
+            appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
+            sendTexts(appointmentConfigureViewModel.invitationList, appointment.name, appointment.location.toString(), appointment.startDate, appointment.endDate)
+
+            FirebaseClient.get().addAppointment(appointment)
+
+        } else {
+            appointment.isInvitee = true
+
+            val listOfInvitees = appointmentConfigureViewModel.invitationList.keys
+
+//            appointmentConfigureViewModel.invitationList.remove()
+
+
+        }
+
+    }
+
     companion object {
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun newInstance(date: LocalDate, electedDate: Int) : ConfigureAppointmentsFragment {
+        fun newInstance(date: LocalDate, electedDate: Int, username: String) : ConfigureAppointmentsFragment {
             val args = Bundle().apply {
                 putSerializable(CHOSEN_DATE, date)
                 putSerializable(ELECTED_DATE, electedDate)
+                putSerializable(USERNAME, username)
             }
 
             return ConfigureAppointmentsFragment().apply {
