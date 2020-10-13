@@ -147,7 +147,7 @@ class ConfigureAppointmentsFragment : Fragment() {
                 Toast.makeText(context, "Please name the event", Toast.LENGTH_SHORT).show()
             } else {
 
-                commitAppointment(true)
+                commitAppointment()
                 clearAppointment()
                 callbacks?.onSubmitSelected()
                 Toast.makeText(context, "Appointment made...", Toast.LENGTH_LONG).show()
@@ -316,7 +316,7 @@ class ConfigureAppointmentsFragment : Fragment() {
 
         // create appointment for host
         appointment.host = username
-        appointment.isInvitee = false
+        appointment.invitee = false
         appointment.invitations = appointmentConfigureViewModel.invitationList.values.toList()
         appointment.invitations += listOf(username)
         sendTexts(
@@ -332,7 +332,7 @@ class ConfigureAppointmentsFragment : Fragment() {
         FirebaseClient.get().addAppointment(appointment)
 
         // create appointment for invitees
-        appointment.isInvitee = true
+        appointment.invitee = true
 
         for ((key, value) in appointmentConfigureViewModel.invitationList) {
             appointment.phoneNumber = key

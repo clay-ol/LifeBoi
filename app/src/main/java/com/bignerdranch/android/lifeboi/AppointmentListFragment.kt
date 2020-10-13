@@ -136,7 +136,7 @@ class AppointmentListFragment : Fragment() {
         fun bind(appointment: Appointment) {
             this.appointment = appointment
             appointmentTextView.text = this.appointment.name
-            if(this.appointment.isInvitee) {
+            if(this.appointment.invitee) {
                 appointmentLinearLayout.setBackgroundResource(R.drawable.border)
             } else {
                 appointmentLinearLayout.setBackgroundResource(R.drawable.border_host)
