@@ -10,4 +10,5 @@ data class DailyWeatherItem(
     var clouds: String = "",
     var visibility: String = "",
     var pop: String = "",
+    var feels_like: FeelsLikeItem,
 )

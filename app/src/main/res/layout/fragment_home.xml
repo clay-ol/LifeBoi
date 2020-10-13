@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="20dp"
     tools:context="com.bignerdranch.android.lifeboi.HomeFragment">
 
     <TextView
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         tools:text="Appointment Name"
         android:layout_gravity="center"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:layout_marginTop="20dp"/>
 
     <TextView
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         tools:text="Appointment Date"
         android:layout_gravity="center"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"/>
 
@@ -31,18 +32,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
+        android:paddingTop="100dp"
         android:layout_margin="20dp">
 
         <Button
             android:id="@+id/fitness_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginHorizontal="10dp"
             android:text="@string/fitness_button"/>
 
         <Button
             android:id="@+id/event_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginHorizontal="10dp"
             android:text="@string/event_button"/>
     </LinearLayout>
 
@@ -57,6 +63,7 @@
             android:id="@+id/weather_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@string/weather_button"/>
 
     </LinearLayout>
