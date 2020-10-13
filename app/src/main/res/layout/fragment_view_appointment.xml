@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp"
         android:text="@string/view_name"
         android:gravity="center"
-        android:textSize="60sp"/>
+        android:textSize="50sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,17 +29,16 @@
             android:text="@string/view_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="50dp"
-            android:textSize="40sp"/>
+            android:layout_marginRight="10dp"
+            android:textSize="30sp"/>
 
         <TextView
             android:id="@+id/view_end"
             android:text="@string/view_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:textSize="40sp"/>
+            android:layout_marginLeft="10dp"
+            android:textSize="30sp"/>
 
     </LinearLayout>
 
@@ -49,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:gravity="center"/>
 
     <TextView
@@ -58,8 +57,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:gravity="center"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/view_invitees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/invitationChipStyle"/>
 
     <LinearLayout
         android:layout_width="match_parent"

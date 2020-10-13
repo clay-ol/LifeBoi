@@ -13,7 +13,11 @@ import java.time.LocalDate
 private const val APPOINTMENT_USER = "com.bignerdranch.android.lifeboi.appointment_user_found"
 private const val APPOINTMENT_DATE = "com.bignerdranch.android.lifeboi.appointment_date"
 
-class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, AppointmentListFragment.Callbacks, ConfigureAppointmentsFragment.Callbacks {
+class AppointmentActivity : AppCompatActivity(),
+    CalendarFragment.Callbacks,
+    AppointmentListFragment.Callbacks,
+    ConfigureAppointmentsFragment.Callbacks,
+    ViewAppointmentFragment.Callbacks {
 
     private var dateType: Int = 3
     private var username = ""
@@ -33,6 +37,14 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
                 .add(R.id.fragment_appointment_container, fragment)
                 .commit()
         }
+    }
+
+    override fun onBackSelected() {
+        val fragment = AppointmentListFragment.newInstance(username)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_appointment_container, fragment)
+            .commit()
     }
 
     override fun onSubmitSelected() {
