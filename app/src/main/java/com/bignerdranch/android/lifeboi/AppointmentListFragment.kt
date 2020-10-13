@@ -38,11 +38,6 @@ class AppointmentListFragment : Fragment() {
 
     private var username = ""
 
-    // TEMPORARY
-    private val appointmentListViewModel: AppointmentListViewModel by lazy {
-        ViewModelProviders.of(this).get(AppointmentListViewModel::class.java)
-    }
-
     override fun onAttach(context: Context){
         super.onAttach(context)
         callbacks = context as Callbacks?

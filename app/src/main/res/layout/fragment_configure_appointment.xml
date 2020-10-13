@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
@@ -51,20 +52,32 @@
             android:maxLength="150"/>
 
 <!--        Will be changed to be appropriate to task-->
-        <EditText
-            android:id="@+id/appointment_invite"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:hint="Invitations"
-            android:lines="1"
-            android:maxLength="20"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="50dp">
+            <Button
+                android:id="@+id/appointment_invite"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:text="Add"
+                android:layout_marginRight="5dp"/>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/appointment_chip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                style="@style/invitationChipStyle"
+                />
+        </LinearLayout>
 
         <Button
             android:id="@+id/appointment_submit"
+            android:text="Submit"
             android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"

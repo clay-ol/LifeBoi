@@ -22,10 +22,16 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.bignerdranch.android.lifeboi.database.FirebaseClient
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import com.bignerdranch.android.lifeboi.twilioapi.TextMessenger
 import com.bignerdranch.android.lifeboi.viewModels.AppointmentConfigureViewModel
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import java.time.LocalDate
 
 
@@ -45,8 +51,9 @@ class ConfigureAppointmentsFragment : Fragment() {
     private lateinit var endDateEditText: EditText
     private lateinit var nameEditText: EditText
     private lateinit var locationEditText: EditText
-    private lateinit var invitationEditText: EditText
+    private lateinit var invitationButton: Button
     private lateinit var submitButton: Button
+    private lateinit var inviteeChipGroup: ChipGroup
     private lateinit var appointmentConfigureViewModel: AppointmentConfigureViewModel
 
     private lateinit var chosenDate: LocalDate
@@ -126,15 +133,15 @@ class ConfigureAppointmentsFragment : Fragment() {
                 || nameEditText.text.isEmpty()) {
                 Toast.makeText(context, "Complete Fields...", Toast.LENGTH_SHORT).show()
             } else {
-
-                // TODO: write to db
+//                val appointment = Appointment()
+//                FirebaseClient.get().addAppointment()
             }
 
             Log.d(DEBUG, "Submit button worked")
 
         }
 
-        invitationEditText.apply {
+        invitationButton.apply {
             isFocusable = false
             val pickContactIntent = Intent(
                 Intent.ACTION_PICK,
@@ -165,8 +172,9 @@ class ConfigureAppointmentsFragment : Fragment() {
         endDateEditText = view.findViewById(R.id.appointment_end) as EditText
         nameEditText = view.findViewById(R.id.appointment_name) as EditText
         locationEditText = view.findViewById(R.id.appointment_location) as EditText
-        invitationEditText = view.findViewById(R.id.appointment_invite) as EditText
+        invitationButton = view.findViewById(R.id.appointment_invite) as Button
         submitButton = view.findViewById(R.id.appointment_submit) as Button
+        inviteeChipGroup = view.findViewById(R.id.appointment_chip) as ChipGroup
 
         return view
     }
@@ -189,11 +197,11 @@ class ConfigureAppointmentsFragment : Fragment() {
                         }
 
                         it.moveToFirst()
-                        val suspect = it.getString(0)
+                        val invitee = it.getString(0)
 
-                        var name = ""
+                        var number = ""
 
-                        val selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + suspect + "%'"
+                        val selection = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " like'%" + invitee + "%'"
                         val projection = arrayOf(ContactsContract.CommonDataKinds.Phone.NUMBER)
                         val c = context!!.contentResolver.query(
                             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
@@ -201,14 +209,32 @@ class ConfigureAppointmentsFragment : Fragment() {
                         )
                         if (c?.moveToFirst()!!) {
                             if (c != null) {
-                                name = c.getString(0)
+                                number = c.getString(0)
                             }
                         }
                         c?.close()
-                        if (name == "") name = "This contact is not saved into your device"
+                        if (number == "") number = "This contact is not saved into your device"
+                        else {
 
+                            var doesExist = false
+
+                            for(i in 0 until inviteeChipGroup.childCount) {
+                                val chipName : Chip = inviteeChipGroup.getChildAt(i) as Chip
+                                if(chipName.text == invitee) {
+                                    doesExist = true
+                                    break;
+                                }
+                            }
+
+                            if(!doesExist) {
+                                val inviteeChip = Chip(requireContext())
+                                inviteeChip.text = invitee
+                                inviteeChipGroup.addView(inviteeChip)
+                            }
+
+                        }
                         // TODO: update invitation field
-                        Log.d(DEBUG, "$suspect, $name")
+                        Log.d(DEBUG, "$invitee, $number")
 
                     }
             }
