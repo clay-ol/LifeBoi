@@ -33,8 +33,6 @@ private const val CHOSEN_DATE = "date_of_choice"
 private const val ELECTED_DATE = "is_start_date"
 private const val USERNAME = "username_configure"
 private const val CONTACT = 1
-private const val GPS_LOCATION = 2
-private const val END_DATE = "end_date"
 
 class ConfigureAppointmentsFragment : Fragment() {
 

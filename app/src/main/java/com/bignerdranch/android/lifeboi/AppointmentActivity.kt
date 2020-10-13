@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.bignerdranch.android.lifeboi.datamodel.Appointment
 import java.time.LocalDate
 
 private const val APPOINTMENT_USER = "com.bignerdranch.android.lifeboi.appointment_user_found"
@@ -63,14 +64,14 @@ class AppointmentActivity : AppCompatActivity(), CalendarFragment.Callbacks, App
             .commit()
     }
 
-    override fun onEditSelected(UUID: String) {
-//        Log.d(DEBUG, "onEditSelected() called")
-//        val fragment = CalendarFragment.newInstance()
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_appointment_container, fragment)
-//            .addToBackStack( null)
-//            .commit()
+    override fun onEditSelected(appointment: Appointment) {
+        Log.d(DEBUG, "onEditSelected() called")
+        val fragment = ViewAppointmentFragment.newInstance(appointment)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_appointment_container, fragment)
+            .addToBackStack( null)
+            .commit()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
