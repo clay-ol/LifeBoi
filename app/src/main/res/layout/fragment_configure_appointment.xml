@@ -64,14 +64,20 @@
                 android:text="Add"
                 android:layout_marginRight="5dp"/>
 
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/appointment_chip"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                app:singleLine="true"
-                style="@style/invitationChipStyle"
-                />
+                android:scrollbars="none" >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/appointment_chip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    app:singleLine="true"
+                    style="@style/invitationChipStyle"
+                    />
+            </HorizontalScrollView>
+
         </LinearLayout>
 
         <Button

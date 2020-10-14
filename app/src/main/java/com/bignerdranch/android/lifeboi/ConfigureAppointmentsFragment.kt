@@ -336,7 +336,7 @@ class ConfigureAppointmentsFragment : Fragment() {
             FirebaseClient.get().getUsername(key) {
                 if(it != "") {
                     appointment.host = it
-//                    FirebaseClient.get().addAppointment(appointment)
+                    FirebaseClient.get().addAppointment(appointment)
                     Log.d(DEBUG, "HOST IS: ${appointment.host}")
 
                 }
