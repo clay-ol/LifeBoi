@@ -39,6 +39,7 @@ class ConfigureAppointmentsFragment : Fragment() {
     interface Callbacks {
         fun onDatePickSelected(electedDate: Int)
         fun onSubmitSelected()
+        fun onBackAppointmentSelected()
     }
 
     private lateinit var startDateEditText: EditText
@@ -47,6 +48,7 @@ class ConfigureAppointmentsFragment : Fragment() {
     private lateinit var locationEditText: EditText
     private lateinit var invitationButton: Button
     private lateinit var submitButton: Button
+    private lateinit var backButton: Button
     private lateinit var inviteeChipGroup: ChipGroup
     private lateinit var appointmentConfigureViewModel: AppointmentConfigureViewModel
 
@@ -117,6 +119,12 @@ class ConfigureAppointmentsFragment : Fragment() {
             }
         }
 
+        backButton.apply {
+            setOnClickListener {
+                callbacks?.onBackAppointmentSelected()
+            }
+        }
+
         locationEditText.apply {
 //            val locationManager = activity?.getSystemService(LOCATION_SERVICE) as LocationManager
 //            val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
@@ -181,6 +189,7 @@ class ConfigureAppointmentsFragment : Fragment() {
         invitationButton = view.findViewById(R.id.appointment_invite) as Button
         submitButton = view.findViewById(R.id.appointment_submit) as Button
         inviteeChipGroup = view.findViewById(R.id.appointment_chip) as ChipGroup
+        backButton = view.findViewById(R.id.appointment_back) as Button
 
         return view
     }

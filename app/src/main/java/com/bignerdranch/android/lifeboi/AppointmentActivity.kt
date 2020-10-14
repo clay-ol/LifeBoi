@@ -35,9 +35,18 @@ class AppointmentActivity : AppCompatActivity(),
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.fragment_appointment_container, fragment)
+                .addToBackStack(null)
                 .commit()
         }
     }
+
+    override fun onBackAppointmentSelected() {
+        val fragment = AppointmentListFragment.newInstance(username)
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_appointment_container, fragment)
+            .addToBackStack(null)
+            .commit()    }
 
     override fun onBackSelected() {
         val fragment = AppointmentListFragment.newInstance(username)
@@ -64,7 +73,6 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
             .commit()
     }
 
