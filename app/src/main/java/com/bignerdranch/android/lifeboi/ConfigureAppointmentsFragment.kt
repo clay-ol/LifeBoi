@@ -298,7 +298,11 @@ class ConfigureAppointmentsFragment : Fragment() {
     private fun sendTexts(list: HashMap<String, String>, event: String, location: String, start: String, end: String) {
 
         for((key, value) in list) {
-            val message = "Hey, $value! $username has invited you to $event at $location starting at $start to $end"
+            var message = if(location != "") {
+                "Hey, $value! $username has invited you to $event at $location starting at $start to $end"
+            } else {
+                "Hey, $value! $username has invited you to $event starting at $start to $end"
+            }
 
             TextMessenger.newInstance().send(key, message)
         }
