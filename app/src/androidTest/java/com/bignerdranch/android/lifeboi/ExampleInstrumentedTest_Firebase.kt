@@ -42,7 +42,6 @@ class ExampleInstrumentedTest_Firebase {
         userAccount = hashMapOf(
             "first_name" to "Foo",
             "last_name" to "Bar",
-            "email" to "foobar@gmail.com",
             "phone_number" to "foobar",
             "password" to "foobar"
         )

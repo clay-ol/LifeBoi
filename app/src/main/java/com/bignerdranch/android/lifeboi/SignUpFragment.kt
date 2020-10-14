@@ -21,13 +21,13 @@ class SignUpFragment: Fragment() {
     private var username = ""
     private var firstName = ""
     private var lastName = ""
-    private var email = ""
+    private var passwordVerify = ""
     private var phoneNumber = ""
     private var password = ""
     private lateinit var userNameEditText: EditText
     private lateinit var firstNameEditText: EditText
     private lateinit var lastNameEditText: EditText
-    private lateinit var emailEditText: EditText
+    private lateinit var passwordVerifyEditText: EditText
     private lateinit var phoneNumberEditText: EditText
     private lateinit var passwordEditText: EditText
     private lateinit var signUpButton: Button
@@ -66,7 +66,7 @@ class SignUpFragment: Fragment() {
         userNameEditText = view.findViewById(R.id.username_edit_text_SU) as EditText
         firstNameEditText = view.findViewById(R.id.firstName_edit_text_SU) as EditText
         lastNameEditText = view.findViewById(R.id.lastName_edit_text_SU) as EditText
-        emailEditText = view.findViewById(R.id.email_edit_text) as EditText
+        passwordVerifyEditText = view.findViewById(R.id.password_verify_edit_text) as EditText
         phoneNumberEditText = view.findViewById(R.id.phone_edit_text) as EditText
         passwordEditText = view.findViewById(R.id.password_edit_text_SU) as EditText
         signUpButton = view.findViewById(R.id.signUp_confirm_button)
@@ -152,7 +152,7 @@ class SignUpFragment: Fragment() {
             }
         }
 
-        val emailWatcher = object : TextWatcher {
+        val passwordVerifyWatcher = object : TextWatcher {
 
             override fun beforeTextChanged(
                 sequence: CharSequence?,
@@ -169,7 +169,7 @@ class SignUpFragment: Fragment() {
                 before: Int,
                 count: Int
             ) {
-                email = sequence.toString()
+                passwordVerify = sequence.toString()
             }
 
             override fun afterTextChanged(sequence: Editable?) {
@@ -230,7 +230,7 @@ class SignUpFragment: Fragment() {
         userNameEditText.addTextChangedListener(usernameWatcher)
         firstNameEditText.addTextChangedListener(firstNameWatcher)
         lastNameEditText.addTextChangedListener(lastNameWatcher)
-        emailEditText.addTextChangedListener(emailWatcher)
+        passwordVerifyEditText.addTextChangedListener(passwordVerifyWatcher)
         phoneNumberEditText.addTextChangedListener(phoneWatcher)
         passwordEditText.addTextChangedListener(passwordWatcher)
 
@@ -239,22 +239,27 @@ class SignUpFragment: Fragment() {
             val userAccount = hashMapOf(
                 "first_name" to firstName,
                 "last_name" to lastName,
-                "email" to email,
                 "phone_number" to phoneNumber,
                 "password" to password
             )
 
             if (!foundEmpty(userAccount) && checkPhoneNumber(phoneNumber) && username != "foobar") {
-                firebaseClient.checkForExistingUser(username, phoneNumber) {result ->
-                    if (!result) {
-                        firebaseClient.addUser(userAccount, username)
-                        val intent = HomeActivity.newIntent((context), username)
-                        startActivityForResult(intent, REQUEST_HOME_SCREEN)
+                if (passwordMatch()) {
+                    firebaseClient.checkForExistingUser(username, phoneNumber) {result ->
+                        if (!result) {
+                            firebaseClient.addUser(userAccount, username)
+                            val intent = HomeActivity.newIntent((context), username)
+                            startActivityForResult(intent, REQUEST_HOME_SCREEN)
 
-                    } else {
-                        Toast.makeText(activity, "Username or Phone Number Taken!", Toast.LENGTH_LONG).show()
+                        } else {
+                            Toast.makeText(activity, "Username or Phone Number Taken!", Toast.LENGTH_LONG).show()
+                        }
                     }
+
+                } else {
+                    Toast.makeText(activity, "Passwords Do Not Match!", Toast.LENGTH_LONG).show()
                 }
+
 
             } else {
                 Toast.makeText(activity, "Missing Input Found or Incorrect Phone Number Length!", Toast.LENGTH_LONG).show()
@@ -273,6 +278,14 @@ class SignUpFragment: Fragment() {
             if (value.equals("")) {
                 return true
             }
+        }
+
+        return false
+    }
+
+    private fun passwordMatch(): Boolean {
+        if(password.equals(passwordVerify)) {
+            return true
         }
 
         return false

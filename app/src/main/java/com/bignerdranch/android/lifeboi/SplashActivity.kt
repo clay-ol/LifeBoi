@@ -2,6 +2,7 @@ package com.bignerdranch.android.lifeboi
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.Manifest.permission.READ_CONTACTS
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -111,5 +112,13 @@ class SplashActivity : AppCompatActivity(), SplashFragment.Callbacks, LoginFragm
             .beginTransaction()
             .replace(R.id.splash_fragment_container, fragment)
             .commit()
+    }
+
+    companion object{
+        fun newIntent(packageContext: Context) : Intent {
+            return Intent(packageContext, SplashActivity::class.java).apply {
+                putExtra(EXTRA_USER_FOUND, true)
+            }
+        }
     }
 }

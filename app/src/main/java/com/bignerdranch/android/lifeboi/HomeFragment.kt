@@ -25,6 +25,7 @@ class HomeFragment : Fragment() {
         fun onWeatherSelected()
         fun onFitnessSelected()
         fun onEventSelected()
+        fun goToSplash()
     }
 
     private var callbacks: Callbacks? = null
@@ -34,6 +35,7 @@ class HomeFragment : Fragment() {
     private lateinit var weatherButton: Button
     private lateinit var eventButton: Button
     private lateinit var fitnessButton: Button
+    private lateinit var logoffButton: Button
 
     private var username = ""
     private lateinit var firebaseClient: FirebaseClient
@@ -72,6 +74,7 @@ class HomeFragment : Fragment() {
         weatherButton = view.findViewById(R.id.weather_button) as Button
         eventButton = view.findViewById(R.id.event_button) as Button
         fitnessButton = view.findViewById(R.id.fitness_button) as Button
+        logoffButton = view.findViewById(R.id.logoff_button) as Button
 
         firebaseClient.getAppointment(username) {result ->
 
@@ -98,6 +101,11 @@ class HomeFragment : Fragment() {
             callbacks?.onFitnessSelected()
 
         }
+
+        logoffButton.setOnClickListener{
+            callbacks?.goToSplash()
+        }
+
         return view
     }
 

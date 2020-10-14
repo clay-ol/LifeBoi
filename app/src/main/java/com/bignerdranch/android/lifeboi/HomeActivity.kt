@@ -14,9 +14,11 @@ import com.bignerdranch.android.lifeboi.viewModels.FitnessViewModel
 
 const val EXTRA_USER_FOUND = "com.bignerdranch.android.lifeboi.user_found"
 private const val REQUEST_EVENT_SCREEN = 10
+private const val REQUEST_SPLASH = 0
+
 private const val TAG = "HomeActivity"
 
-class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks{
+class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
     private var username = ""
 
     private var latitude = 42.2626
@@ -62,6 +64,10 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks{
         super.onPause()
     }
 
+    override fun goToSplash() {
+        val intent = SplashActivity.newIntent(this@HomeActivity)
+        startActivityForResult(intent, REQUEST_SPLASH)
+    }
 
     override fun onWeatherSelected() {
         getLocation()

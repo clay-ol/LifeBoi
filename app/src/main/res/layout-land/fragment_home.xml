@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:paddingTop="100dp"
+        android:paddingTop="20dp"
         android:layout_margin="20dp">
 
         <Button
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center"
-        android:layout_margin="20dp">
+        android:layout_margin="0dp">
 
         <Button
             android:id="@+id/logoff_button"
