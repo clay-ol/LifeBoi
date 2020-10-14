@@ -1,4 +1,4 @@
-package com.bignerdranch.android.lifeboi
+package com.bignerdranch.android.lifeboi.datamodel
 
 data class FeelsLikeItem (
     var morn: String = "",

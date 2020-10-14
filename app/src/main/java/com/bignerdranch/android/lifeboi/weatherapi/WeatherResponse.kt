@@ -1,9 +1,8 @@
 package com.bignerdranch.android.lifeboi.weatherapi
 
-import com.bignerdranch.android.lifeboi.CurrentWeatherItem
-import com.bignerdranch.android.lifeboi.DailyWeatherItem
+import com.bignerdranch.android.lifeboi.datamodel.CurrentWeatherItem
+import com.bignerdranch.android.lifeboi.datamodel.DailyWeatherItem
 import com.bignerdranch.android.lifeboi.HourlyWeatherItem
-import com.google.gson.annotations.SerializedName
 
 class WeatherResponse {
 //    @SerializedName("current")

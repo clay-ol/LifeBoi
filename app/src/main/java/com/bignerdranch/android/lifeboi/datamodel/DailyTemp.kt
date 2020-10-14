@@ -1,4 +1,4 @@
-package com.bignerdranch.android.lifeboi
+package com.bignerdranch.android.lifeboi.datamodel
 
 data class DailyTemp (
     var morn: String = "",
