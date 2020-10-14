@@ -298,11 +298,13 @@ class ConfigureAppointmentsFragment : Fragment() {
     private fun sendTexts(list: HashMap<String, String>, event: String, location: String, start: String, end: String) {
 
         for((key, value) in list) {
-            var message = if(location != "") {
+            val message = if(location != "") {
                 "Hey, $value! $username has invited you to $event at $location starting at $start to $end"
             } else {
                 "Hey, $value! $username has invited you to $event starting at $start to $end"
             }
+
+            Log.d(DEBUG, "$message ")
 
             TextMessenger.newInstance().send(key, message)
         }
@@ -314,6 +316,9 @@ class ConfigureAppointmentsFragment : Fragment() {
         appointment.startDate = startDateEditText.text.toString()
         appointment.endDate = endDateEditText.text.toString()
         appointment.name = nameEditText.text.toString()
+        appointment.location = appointmentConfigureViewModel.location
+
+        Log.d(DEBUG, "${appointment.location}, ${appointmentConfigureViewModel.location}, ${locationEditText.text}")
 
         // create appointment for host
         appointment.host = username

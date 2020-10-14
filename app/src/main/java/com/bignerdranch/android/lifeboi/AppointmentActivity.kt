@@ -44,6 +44,7 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
+            .addToBackStack( null)
             .commit()
     }
 
@@ -52,6 +53,7 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
+            .addToBackStack( null)
             .commit()
     }
 
@@ -62,6 +64,7 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
+            .addToBackStack( null)
             .commit()
     }
 

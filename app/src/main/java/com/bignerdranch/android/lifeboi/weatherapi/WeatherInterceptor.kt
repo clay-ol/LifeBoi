@@ -16,7 +16,7 @@ class WeatherInterceptor(latitude: String, longitude: String ) : Interceptor {
             .addQueryParameter("lat", latitude )
             .addQueryParameter("lon", longitude)
             .addQueryParameter("exclude", "minutely")
-            .addQueryParameter("appid", "" )
+            .addQueryParameter("appid", "bd0d6f55a110a7763eda5a7c0ada5e1e" )
             .build()
 
         val newRequest: Request = originalRequest.newBuilder()
