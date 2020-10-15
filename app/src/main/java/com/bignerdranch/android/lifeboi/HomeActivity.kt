@@ -30,8 +30,6 @@ class HomeActivity : AppCompatActivity(), HomeFragment.Callbacks {
 
     private lateinit var locationManager: LocationManager
 
-    //private lateinit var appointment: Appointment
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)

@@ -6,10 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +20,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 
 private const val TAG = "AppointmentListFragment"
 private const val ARG_USERNAME = "username"
+private const val REQUEST_HOME_SCREEN = 0
 
 class AppointmentListFragment : Fragment() {
 
@@ -33,6 +31,7 @@ class AppointmentListFragment : Fragment() {
 
     private lateinit var appointmentRecyclerView: RecyclerView
     private lateinit var appointmentButton: ImageButton
+    private lateinit var appointmentBackButton: Button
 
     private lateinit var adapter: AppointmentAdapter
     private var callbacks: Callbacks? = null
@@ -67,6 +66,7 @@ class AppointmentListFragment : Fragment() {
         appointmentButton = view.findViewById(R.id.configure_appointment) as ImageButton
         appointmentRecyclerView = view.findViewById(R.id.appoint_reycler_view) as RecyclerView
         appointmentRecyclerView.layoutManager = LinearLayoutManager(context)
+        appointmentBackButton = view.findViewById(R.id.back_home) as Button
 
         updateUI()
 
@@ -76,14 +76,21 @@ class AppointmentListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        appointmentButton.setOnClickListener {
-            Log.d(DEBUG, "Switching fragments: AppointmentList -> Calendar")
-            callbacks?.onAddSelected()
-        }
     }
 
     override fun onStart() {
         super.onStart()
+
+        appointmentButton.setOnClickListener {
+            Log.d(DEBUG, "Switching fragments: AppointmentList -> Calendar")
+            callbacks?.onAddSelected()
+        }
+
+        appointmentBackButton.setOnClickListener {
+            val intent = HomeActivity.newIntent((context), username)
+            startActivityForResult(intent, REQUEST_HOME_SCREEN)
+        }
+
         adapter.startListening()
     }
 

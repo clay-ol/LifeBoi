@@ -6,11 +6,19 @@
     android:layout_height="match_parent"
     android:id="@+id/appointment_list_manager">
 
+    <Button
+        android:id="@+id/back_home"
+        android:text="Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/appoint_reycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="100dp"/>
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="58dp"/>
 
     <ImageButton
         android:id="@+id/configure_appointment"

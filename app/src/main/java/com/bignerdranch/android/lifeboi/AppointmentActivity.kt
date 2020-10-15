@@ -46,14 +46,15 @@ class AppointmentActivity : AppCompatActivity(),
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
             .addToBackStack(null)
-            .commit()    }
+            .commit()
+    }
 
     override fun onBackSelected() {
         val fragment = AppointmentListFragment.newInstance(username)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
+            .addToBackStack(null)
             .commit()
     }
 
@@ -62,17 +63,17 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
+            .addToBackStack(null)
             .commit()
     }
 
     override fun onDatePickSelected(electedDate: Int) {
-        Log.d(DEBUG, "onEditSelected() called")
         dateType = electedDate
         val fragment = CalendarFragment.newInstance()
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
+            .addToBackStack(null)
             .commit()
     }
 
@@ -83,7 +84,7 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
+            .addToBackStack(null)
             .commit()
     }
 
@@ -93,7 +94,7 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
+            .addToBackStack(null)
             .commit()
     }
 
@@ -104,7 +105,7 @@ class AppointmentActivity : AppCompatActivity(),
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_appointment_container, fragment)
-            .addToBackStack( null)
+            .addToBackStack(null)
             .commit()
     }
 
